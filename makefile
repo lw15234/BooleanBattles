@@ -14,5 +14,5 @@ base:
 	$(GCC) -DRUN=testBase $(BASE)
 	./booleanBattles
 enemy:
-	$(GCC) -DRUN=testGrid $(ENEMY)
+	$(GCC) -DRUN=testEnemy $(ENEMY)
 	./booleanBattles
