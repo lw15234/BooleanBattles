@@ -1,14 +1,8 @@
 #include "enemy.h"
 #include <string.h>
 
-#define ATTACKCOMBOS 8
-#define FILLER -99
 
-struct enemy{
-    int weakness[ATTACKCOMBOS];
-    int solutions;
-    char* equation;
-};
+
 
 struct enemy createEnemy()
 {
@@ -16,7 +10,7 @@ struct enemy createEnemy()
     enemy* pEnemy;
     pEnemy = &newEnemy;
     int tmp[] = {101, 110, 111};
-    newEnemy.solutions = 3;
+    newEnemy.solutions = sizeof(tmp) / sizeof(tmp[0]);
     newEnemy.equation = "(F || W) && G";
     fillWeaknessArray(pEnemy, tmp);
     fillWeaknessFiller(pEnemy);

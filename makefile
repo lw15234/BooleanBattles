@@ -4,6 +4,7 @@ GCC = gcc -std=c99 -O3 -pedantic -Wall -Werror -o booleanBattles
 # Set up the linear sequence of modules, in dependency order
 BASE = booleanBattles.c base.c
 ENEMY = $(BASE) enemy.c
+CHECKATTACK = $(ENEMY) checkAttack.c
 
 
 # Make the whole program by default
@@ -15,4 +16,7 @@ base:
 	./booleanBattles
 enemy:
 	$(GCC) -DRUN=testEnemy $(ENEMY)
+	./booleanBattles
+checkAttack:
+	$(GCC) -DRUN=testCheckAttack $(CHECKATTACK)
 	./booleanBattles
