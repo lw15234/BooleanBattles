@@ -7,4 +7,4 @@ void implementDamage(int fire, int water, int grass, enemy* pEnemy, int* enemyHe
 int checkHealth(int enemyHealth, int playerHealth);
 int loseBattle();
 int winBattle();
-int subTestDamage(int fire, int water, int grass);
+int subTestDamage(int grass, int water, int fire, int* pTurns);

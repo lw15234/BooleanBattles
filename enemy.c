@@ -1,7 +1,7 @@
 #include "enemy.h"
 #include <string.h>
 
-struct enemy createEnemy()
+struct enemy createEnemy(battleState* pState, int* pEnemyHealth)
 {
     enemy newEnemy;
     enemy* pEnemy;
@@ -11,6 +11,8 @@ struct enemy createEnemy()
     newEnemy.equation = "(F || W) && G";
     fillWeaknessArray(pEnemy, tmp);
     fillWeaknessFiller(pEnemy);
+    *pEnemyHealth = newEnemy.solutions;
+    *pState = PLAYERINPUT;
     return newEnemy;
 }
 
@@ -36,7 +38,11 @@ void testEnemy()
 {
     int i;
     enemy newEnemy;
-    newEnemy = createEnemy();
+    battleState currentState;
+    battleState* pState = &currentState;
+    int enemyHealth;
+    int* pEnemyHealth = &enemyHealth;
+    newEnemy = createEnemy(pState, pEnemyHealth);
     if(newEnemy.weakness[0] != 101){
         fail("Weakness 0 set incorrectly");
     }
@@ -56,6 +62,13 @@ void testEnemy()
         if(newEnemy.weakness[i] != FILLER){
             fail("Filler weakness not set");
         }
+    }
+    if(*pEnemyHealth != 3){
+        fail("Enemy health not set");
+    }
+
+    if(*pState != PLAYERINPUT){
+        fail("State not set");
     }
 
     succeed("Enemy module ok");

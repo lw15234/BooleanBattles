@@ -30,12 +30,12 @@ void testCheckAttack()
     }
     for(l = 0; l < 5; l++){
         if(results[l] != 0){
-            fail("Attack check failed.");
+            fail("Incorrect attack check failed.");
         }
     }
     for(l = 5; l < ATTACKCOMBOS; l++){
         if(results[l] != 1){
-            fail("Attack check failed.");
+            fail("Correct attack check failed.");
         }
     }
     succeed("CheckAttack ok");

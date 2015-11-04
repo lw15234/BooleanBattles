@@ -1,10 +1,10 @@
 #include "damage.h"
 #include <stdio.h>
 
-int damageState(int fire, int water, int grass, enemy* pEnemy, int* enemyHealth, int* playerHealth)
+int damageState(int fire, int water, int grass, enemy* pEnemy, int* enemyHealth, int* playerHealth, battleState* pState)
 {
     implementDamage(fire, water, grass, pEnemy, enemyHealth, playerHealth);
-    return checkHealth(*enemyHealth, *playerHealth);
+    return checkHealth(*enemyHealth, *playerHealth, pState);
 }
 
 void implementDamage(int fire, int water, int grass, enemy* pEnemy, int* enemyHealth, int* playerHealth)
@@ -19,14 +19,17 @@ void implementDamage(int fire, int water, int grass, enemy* pEnemy, int* enemyHe
     return;
 }
 
-int checkHealth(int enemyHealth, int playerHealth)
+int checkHealth(int enemyHealth, int playerHealth, battleState* pState)
 {
     if(playerHealth <= 0){
+        *pState = LOSE;
         return loseBattle();
     }
     else if(enemyHealth <= 0){
+        *pState = WIN;
         return winBattle();
     }
+    *pState = PLAYERINPUT;
     return 0;
 }
 
@@ -67,6 +70,11 @@ void testDamage()
             fail("Win check failed.");
         }
     }
+    for(l = 0; l < ATTACKCOMBOS; l++){
+        if(results[l][1] != 3){
+            fail("Turn counter failed.");
+        }
+    }
     succeed("Damage ok");
 
 }
@@ -75,7 +83,9 @@ int subTestDamage(int grass, int water, int fire, int* pTurns)
 {
     int playerHealth = 3, enemyHealth = 3, result = 0;
     int *pPlayerHealth = &playerHealth, *pEnemyHealth = &enemyHealth;
-    enemy newEnemy = createEnemy();
+    battleState currentState;
+    battleState* pState = &currentState;
+    enemy newEnemy = createEnemy(pState, pEnemyHealth);
     enemy* pEnemy = &newEnemy;
     while(result == 0){
         result = damageState(fire, water, grass, pEnemy, pEnemyHealth, pPlayerHealth);

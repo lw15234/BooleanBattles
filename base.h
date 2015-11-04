@@ -12,3 +12,11 @@ typedef struct display display;
 struct enemy;
 typedef struct enemy enemy;
 
+typedef enum battleState{
+    START,
+    PLAYERINPUT,
+    PLAYERACTION,
+    WIN,
+    LOSE
+} battleState;
+

@@ -11,6 +11,6 @@ struct enemy{
     char* equation;
 };
 
-struct enemy createEnemy();
+struct enemy createEnemy(battleState* pState, int* pEnemyHealth);
 void fillWeaknessArray(enemy* pEnemy, int weaknesses[]);
 void fillWeaknessFiller(enemy* pEnemy);
