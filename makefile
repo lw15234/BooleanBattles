@@ -5,6 +5,7 @@ GCC = gcc -std=c99 -O3 -pedantic -Wall -Werror -o booleanBattles
 BASE = booleanBattles.c base.c
 ENEMY = $(BASE) enemy.c
 CHECKATTACK = $(ENEMY) checkAttack.c
+DAMAGE = $(CHECKATTACK) damage.c
 
 
 # Make the whole program by default
@@ -19,4 +20,7 @@ enemy:
 	./booleanBattles
 checkAttack:
 	$(GCC) -DRUN=testCheckAttack $(CHECKATTACK)
+	./booleanBattles
+damage:
+	$(GCC) -DRUN=testDamage $(DAMAGE)
 	./booleanBattles
