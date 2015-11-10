@@ -31,6 +31,14 @@ int main(void)
 
     createButtons(buttonArray, BUTTONS, renderer);
 
+        SDL_RenderClear(renderer);
+        for(i = 0; i < BUTTONS; i++){
+            SDL_RenderCopy(renderer, buttonArray[i].buttonTex[0], NULL, 
+                &buttonArray[i].buttonPos);
+            printf("Render button %d\n", i);
+        }
+        SDL_RenderPresent(renderer);
+
     while(run){
         if (SDL_PollEvent(&event)){
             if(event.type == SDL_QUIT){

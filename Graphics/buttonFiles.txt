@@ -1,0 +1,6 @@
+offFire.bmp
+onFire.bmp
+offWater.bmp
+onWater.bmp
+offGrass.bmp
+onGrass.bmp
