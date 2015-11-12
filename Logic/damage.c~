@@ -53,7 +53,7 @@ void testDamage()
         for(j = 0; j <= 1; j++){
             for(k = 0; k <= 1; k++){
                 turns = 0;
-                results[l][0] = subTestDamage(i * 100 + j * 10 + k, pTurns);
+                results[l][0] = subTestDamage(i + j * 10 + k * 100, pTurns);
                 results[l][1] = turns;
                 l++;
             }

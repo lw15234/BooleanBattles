@@ -9,8 +9,3 @@ int playerInput(battleState *pState)
     attack = grass * 100 + water * 10 + fire;
     return attack;
 }
-
-void testInput()
-{
-    succeed("Input ok");
-}

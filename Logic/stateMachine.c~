@@ -7,7 +7,7 @@ void runStateMachine()
     battleState* pState = &currentState;
     enemy newEnemy;
     enemy* pEnemy = &newEnemy;
-    int attack = 0, enemyHealth, playerHealth, result = 0;
+    int attack, enemyHealth, playerHealth, result = 0;
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
 
     while(result == 0){
