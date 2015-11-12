@@ -1,4 +1,4 @@
-#include "input.h"
+#include "testInput.h"
 #include <stdio.h>
 
 int playerInput(battleState *pState)
