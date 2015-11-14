@@ -7,20 +7,20 @@ void runStateMachine()
     battleState* pState = &currentState;
     enemy newEnemy;
     enemy* pEnemy = &newEnemy;
-    int fire, water, grass, enemyHealth, playerHealth, result = 0;
-    int *pFire = &fire, *pWater = &water, *pGrass = &grass;
+    int attack, enemyHealth, playerHealth, result = 0;
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
 
     while(result == 0){
         switch(currentState){
             case START:
-                newEnemy = createEnemy(pState);
+                playerHealth = 3;
+                newEnemy = createEnemy(pState, pEnemyHealth);
                 break;
             case PLAYERINPUT:
-                playerInput(pFire, pWater, pGrass, pState);
+                attack = playerInput(pState);
                 break;
             case PLAYERACTION:
-                damageState(fire, water, grass, pEnemy, pPlayerHealth, pEnemyHealth, pState);
+                damageState(attack, pEnemy, pPlayerHealth, pEnemyHealth, pState);
                 break;
             case WIN:
                 result = 1;

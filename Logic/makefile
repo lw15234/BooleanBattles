@@ -6,8 +6,8 @@ BASE = booleanBattles.c base.c
 ENEMY = $(BASE) enemy.c
 CHECKATTACK = $(ENEMY) checkAttack.c
 DAMAGE = $(CHECKATTACK) damage.c
-INPUT = $(DAMAGE) input.c
-STATEMACHINE = $(INPUT) stateMachine.c
+TESTINPUT = $(DAMAGE) testInput.c
+STATEMACHINE = $(TESTINPUT) stateMachine.c
 
 
 # Make the whole program by default
@@ -26,9 +26,9 @@ checkAttack:
 damage:
 	$(GCC) -DRUN=testDamage $(DAMAGE)
 	./booleanBattles
-input:
-	$(GCC) -DRUN=testInput $(INPUT)
+testInput:
+	$(GCC) -DRUN=testInput $(TESTINPUT)
 	./booleanBattles
 stateMachine:
-	$(GCC) -DRUN=testStateMachine $(STATEMACHINE)
+	$(GCC) -DRUN=runStateMachine $(STATEMACHINE)
 	./booleanBattles

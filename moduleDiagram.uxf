@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>810</y>
+      <w>320</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>base
+--
+Contains definitions that will be used
+throughout program. Succeed and fail print
+to terminal and are used for testing.
+--
+void succeed (char *message)
+void fail (char *message)
+struct enemy
+enum battleState</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>490</y>
+      <w>340</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>checkAttack
+--
+Checks if enemy is weak to chosen attack
+--
+int checkAttack (int attack, enemy* pEnemy)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>320</y>
+      <w>340</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>damage
+--
+Damages either player or enemy
+Checks to see if the battle has ended
+Ends game if so
+--
+int damageState (int attack, enemy* pEnemy,
+    int* enemyHealth, int* playerHealth,
+    battleState* pState)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>460</x>
+      <y>320</y>
+      <w>270</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>testInput
+--
+Gets input from terminal for attacks
+Will be replaced by GUI
+--
+int playerInput (battleState *pState)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>300</x>
+      <y>150</y>
+      <w>270</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>stateMachine
+--
+Keeps track of battle state
+Calls functions from other modules
+as battle progresses
+--
+void runStateMachine (void)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>60</x>
+      <y>600</y>
+      <w>360</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>enemy
+--
+Creates a new enemy
+Currently only builds same test enemy
+--
+struct enemy createEnemy (battleState* pState,
+    int* pEnemyHealth)
+struct enemy {
+    int weakness[];
+    int solutions;
+    char* equation; }
+	</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>230</x>
+      <y>760</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>230</x>
+      <y>550</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>230</x>
+      <y>440</y>
+      <w>30</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>230</x>
+      <y>240</y>
+      <w>220</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;30.0;200.0;30.0;200.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>240</y>
+      <w>190</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>170.0;80.0;170.0;30.0;10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>40</y>
+      <w>270</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>booleanBattles
+--
+Plays the game</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>610</x>
+      <y>80</y>
+      <w>300</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>280.0;70.0;280.0;30.0;10.0;30.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>80</y>
+      <w>220</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;30.0;200.0;30.0;200.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>760</x>
+      <y>150</y>
+      <w>270</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>display
+--
+Displays the game
+Returns input from attack buttons
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

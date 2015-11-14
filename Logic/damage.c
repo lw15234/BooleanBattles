@@ -1,15 +1,14 @@
 #include "damage.h"
 #include <stdio.h>
 
-int damageState(int fire, int water, int grass, enemy* pEnemy, int* enemyHealth, int* playerHealth, battleState* pState)
+int damageState(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth, battleState* pState)
 {
-    implementDamage(fire, water, grass, pEnemy, enemyHealth, playerHealth);
+    implementDamage(attack, pEnemy, enemyHealth, playerHealth);
     return checkHealth(*enemyHealth, *playerHealth, pState);
 }
 
-void implementDamage(int fire, int water, int grass, enemy* pEnemy, int* enemyHealth, int* playerHealth)
+void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth)
 {
-    int attack = 100 * grass + 10 * water + fire;
     if(checkAttack(attack, pEnemy)){
         (*enemyHealth)--;
     }
@@ -54,7 +53,7 @@ void testDamage()
         for(j = 0; j <= 1; j++){
             for(k = 0; k <= 1; k++){
                 turns = 0;
-                results[l][0] = subTestDamage(i, j, k, pTurns);
+                results[l][0] = subTestDamage(i * 100 + j * 10 + k, pTurns);
                 results[l][1] = turns;
                 l++;
             }
@@ -79,7 +78,7 @@ void testDamage()
 
 }
 
-int subTestDamage(int grass, int water, int fire, int* pTurns)
+int subTestDamage(int attack, int* pTurns)
 {
     int playerHealth = 3, enemyHealth = 3, result = 0;
     int *pPlayerHealth = &playerHealth, *pEnemyHealth = &enemyHealth;
@@ -88,7 +87,7 @@ int subTestDamage(int grass, int water, int fire, int* pTurns)
     enemy newEnemy = createEnemy(pState, pEnemyHealth);
     enemy* pEnemy = &newEnemy;
     while(result == 0){
-        result = damageState(fire, water, grass, pEnemy, pEnemyHealth, pPlayerHealth, pState);
+        result = damageState(attack, pEnemy, pEnemyHealth, pPlayerHealth, pState);
         (*pTurns)++;
     }
     return result;

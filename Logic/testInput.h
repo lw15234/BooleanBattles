@@ -2,4 +2,4 @@
 
 #include "damage.h"
 
-void playerInput(int *fire, int *water, int *grass);
+int playerInput(battleState *pState);
