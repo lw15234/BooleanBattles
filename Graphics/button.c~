@@ -34,6 +34,7 @@ int main(void)
 
 
 
+
     SDL_DestroyRenderer(renderer);
     for(i = 0; i < 3; i++){
         for(j = 0; j < 2; j++){
@@ -122,8 +123,5 @@ int renderButtons(button buttonArray[], int count, SDL_Renderer *renderer)
     for(i = 0; i < count -1; i++){
         attack += choice[i] * 10 ^ i;
     }
-    SDL_RenderClear(renderer);
-    SDL_RenderPresent(renderer);
-    SDL_Delay(5000);
     return attack;
 }
