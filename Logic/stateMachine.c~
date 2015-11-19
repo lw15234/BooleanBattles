@@ -1,19 +1,20 @@
 #include "stateMachine.h"
 #include <stdio.h>
 
-void runStateMachine()
+void runStateMachine(int playerHealth, int abilities, display *d)
 {
     battleState currentState = START;
     battleState* pState = &currentState;
     enemy newEnemy;
     enemy* pEnemy = &newEnemy;
-    int attack, enemyHealth, playerHealth, result = 0;
+    int attack = 0, enemyHealth, result = 0;
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
+    button *buttonArray = NULL;
 
     while(result == 0){
         switch(currentState){
             case START:
-                playerHealth = 3;
+                createButtons(buttonArray, abilities + 1, d->ren);
                 newEnemy = createEnemy(pState, pEnemyHealth);
                 break;
             case PLAYERINPUT:
@@ -30,4 +31,8 @@ void runStateMachine()
                 break;
         }
     }
+
+    freeButtons(buttonArray, abilities + 1);
+
+    return;
 }

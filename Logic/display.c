@@ -1,0 +1,132 @@
+#include "SDL.h"
+#include "display.h"
+#include <stdio.h>
+#define BUTTONS 3
+
+
+
+display *createDisplay(int width, int height)
+{
+    display *d = (display *)malloc(sizeof(display));
+    d->width = width;
+    d->height = height;
+    SDL_Init(SDL_INIT_EVERYTHING);
+    d->win = NULL;
+    d->ren = NULL;
+    d->win = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, d->width, d->height, 0);
+    d->ren = SDL_CreateRenderer(d->win, -1, SDL_RENDERER_ACCELERATED);
+
+    return d;
+}
+
+void createButtons(button buttonArray[], int count, SDL_Renderer *renderer)
+{
+    int w = 100, h = 100, x = 250, y = 550, i, j;
+    FILE* buttonFiles;
+    char offFile[15], onFile[15];
+
+    buttonArray = malloc(count * sizeof(button));
+    for(i = 0; i < count; i++){
+        for(j = 0; j < 2; j++){
+            buttonArray[i].buttonSur[j] = malloc(sizeof(SDL_Surface));
+            buttonArray[i].buttonTex[j] = malloc(sizeof(SDL_Texture));
+        }
+    }
+
+    // Sets the positions of the buttons 
+    buttonFiles = fopen("buttonFiles.txt", "r");
+	for(i = 0; i < count; i++){
+		buttonArray[i].buttonPos.w = w;
+		buttonArray[i].buttonPos.h = h;
+		buttonArray[i].buttonPos.y = y;
+        if(i == count - 1){
+    		buttonArray[i].buttonPos.x = x + (w + 50) * i;
+        }
+        else{
+    		buttonArray[i].buttonPos.x = x + (w + 10) * i;
+        }
+        // Buttons images are read from a file of files
+        if(fscanf(buttonFiles, "%s %s", offFile, onFile) == 2){
+            printf("%s %s\n",offFile, onFile);
+            buttonArray[i].buttonSur[0] = SDL_LoadBMP(offFile);
+            buttonArray[i].buttonSur[1] = SDL_LoadBMP(onFile);
+            buttonArray[i].buttonTex[0] = 
+                SDL_CreateTextureFromSurface(renderer, buttonArray[i].buttonSur[0]);
+            buttonArray[i].buttonTex[1] = 
+                SDL_CreateTextureFromSurface(renderer, buttonArray[i].buttonSur[1]);
+        }
+        else{
+            printf("Could not find files\n");
+            exit(1);
+        }
+	}
+    fclose(buttonFiles);
+}
+
+/* Checks for the left mouse button being clicked and checks where on the screen it was pressed, if over a button it toggles the button's state. */
+int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
+{
+	int x, y;
+    if(e->type == SDL_MOUSEBUTTONDOWN){
+        SDL_GetMouseState(&x, &y);
+		if( x > buttonPos.x && x < buttonPos.x + buttonPos.w &&
+            y > buttonPos.y &&  y < buttonPos.y + buttonPos.h){
+			return 1 - choice;
+		}
+    }
+    return choice;
+}
+
+int renderButtons(button buttonArray[], int count, SDL_Renderer *renderer, battleState *pState)
+{
+    int i, run = 1, attack = 0;
+    int choice[BUTTONS] = {0};
+    SDL_Event event;
+    while(run){
+        if (SDL_PollEvent(&event)){
+            if(event.type == SDL_QUIT){
+                run = 0;
+            }
+            for(i = 0; i < count; i++){
+                choice[i] = pressButton(&event, choice[i], buttonArray[i].buttonPos);
+            }
+            if(choice[count - 1] == 1){
+                run = 0;
+            }
+        }
+        //Renders the button the the user has selected
+        SDL_RenderClear(renderer);
+        for(i = 0; i < count; i++){
+            SDL_RenderCopy(renderer, buttonArray[i].buttonTex[choice[i]], NULL, 
+                &buttonArray[i].buttonPos);
+        }
+        SDL_RenderPresent(renderer);
+    }
+    for(i = 0; i < count -1; i++){
+        attack += choice[i] * 10 ^ i;
+    }
+    pState = PLAYERACTION;
+    return attack;
+}
+
+void freeButtons(button *buttonArray, int buttons)
+{
+    int i, j;    
+    for(i = 0; i < buttons; i++){
+        for(j = 0; j < 2; j++){
+            SDL_DestroyTexture(buttonArray[i].buttonTex[j]);
+            SDL_FreeSurface(buttonArray[i].buttonSur[j]);
+            free(buttonArray[i].buttonTex[j]);
+            free(buttonArray[i].buttonSur[j]);
+        }
+    }
+    free(buttonArray);
+}
+
+void closeDisplay(display *d)
+{
+    SDL_DestroyWindow(d->win);
+    SDL_Quit();
+    free(d);
+    return;
+}
