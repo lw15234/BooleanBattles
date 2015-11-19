@@ -7,6 +7,11 @@
 
 display *createDisplay(int width, int height)
 {
+    SDL_Init(SDL_INIT_VIDEO);
+    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        exit(1);
+    }
     display *d = (display *)malloc(sizeof(display));
     d->width = width;
     d->height = height;
@@ -131,13 +136,8 @@ void closeDisplay(display *d)
 
 
 
-void testDisplay()
+int main(void)
 {
-    SDL_Init(SDL_INIT_VIDEO);
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
-        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        exit(1);
-    }
     display *d = createDisplay(1080, 720);
     button buttonArray[BUTTONS];
     battleState state = PLAYERINPUT;
@@ -145,5 +145,5 @@ void testDisplay()
     createButtons(buttonArray, d->ren);
     renderButtons(buttonArray, BUTTONS, d->ren, &state);
     closeDisplay(d);
-    return;
+    return 0;
 }

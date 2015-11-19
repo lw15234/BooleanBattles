@@ -1,8 +1,8 @@
 # Compile with standard options
-GCC = gcc `sdl2-config --cflags` -std=c99 -O3 -pedantic -Wall -Werror -o booleanBattles -lm
-LIBS = `sdl2-config --libs`
-
+CFLAGS = `sdl2-config --cflags` -O4 -Wall -Wextra -Wfloat-equal -pedantic -std=c99 -lm
 TARGET = booleanBattles
+LIBS = `sdl2-config --libs`
+CC = gcc
 
 # Set up the linear sequence of modules, in dependency order
 TEST = booleanBattles.c
@@ -20,25 +20,25 @@ default: play
 
 # Compile and test each module
 base:
-	$(GCC) -DRUN=testBase $(BASE) $(TEST) $(LIBS)
+	$(CC) $(BASE) $(TEST) -DRUN=testBase -o $(TARGET) $(CFLAGS) $(LIBS)
 	./booleanBattles
 enemy:
-	$(GCC) -DRUN=testEnemy $(ENEMY) $(TEST) $(LIBS)
+	$(CC) $(ENEMY) $(TEST) -DRUN=testEnemy -o $(TARGET) $(CFLAGS) $(LIBS)
 	./booleanBattles
 checkAttack:
-	$(GCC) -DRUN=testCheckAttack $(CHECKATTACK) $(TEST) $(LIBS)
+	$(CC) $(CHECKATTACK) $(TEST) -DRUN=testCheckAttack -o $(TARGET) $(CFLAGS) $(LIBS)
 	./booleanBattles
 damage:
-	$(GCC) -DRUN=testDamage $(DAMAGE) $(TEST) $(LIBS)
+	$(CC) $(DAMAGE) $(TEST) -DRUN=testDamage -o $(TARGET) $(CFLAGS) $(LIBS)
 	./booleanBattles
 display:
-	$(GCC) -DRUN=testDisplay $(DISPLAY) $(TEST) $(LIBS)
+	$(CC) $(DISPLAY) $(TEST) -DRUN=testDisplay -o $(TARGET) $(CFLAGS) $(LIBS)
 	./booleanBattles
 stateMachine:
-	$(GCC) -DRUN=runStateMachine $(STATEMACHINE)
+	$(CC) -DRUN=runStateMachine $(STATEMACHINE)
 	./booleanBattles
 play:
-	$(GCC) $(STATEMACHINE)
+	$(CC) $(STATEMACHINE)
 	./booleanBattles
 
 
