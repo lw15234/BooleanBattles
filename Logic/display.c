@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include <SDL.h>
 #include "display.h"
 #include <stdio.h>
 #define BUTTONS 3
@@ -14,32 +14,30 @@ display *createDisplay(int width, int height)
     d->win = NULL;
     d->ren = NULL;
     d->win = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, d->width, d->height, 0);
+    if(d->win == NULL){
+        fprintf(stderr, "Window could not be created! SDL_Error: %s.\n", SDL_GetError());
+        exit(1);
+    }
     d->ren = SDL_CreateRenderer(d->win, -1, SDL_RENDERER_ACCELERATED);
+    SDL_RenderPresent(d->ren);
 
     return d;
 }
 
-void createButtons(button buttonArray[], int count, SDL_Renderer *renderer)
+void createButtons(button buttonArray[], SDL_Renderer *renderer)
 {
-    int w = 100, h = 100, x = 250, y = 550, i, j;
+    int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
     char offFile[15], onFile[15];
 
-    buttonArray = malloc(count * sizeof(button));
-    for(i = 0; i < count; i++){
-        for(j = 0; j < 2; j++){
-            buttonArray[i].buttonSur[j] = malloc(sizeof(SDL_Surface));
-            buttonArray[i].buttonTex[j] = malloc(sizeof(SDL_Texture));
-        }
-    }
-
+    
     // Sets the positions of the buttons 
     buttonFiles = fopen("buttonFiles.txt", "r");
-	for(i = 0; i < count; i++){
+	for(i = 0; i < BUTTONS; i++){
 		buttonArray[i].buttonPos.w = w;
 		buttonArray[i].buttonPos.h = h;
 		buttonArray[i].buttonPos.y = y;
-        if(i == count - 1){
+        if(i == BUTTONS - 1){
     		buttonArray[i].buttonPos.x = x + (w + 50) * i;
         }
         else{
@@ -70,7 +68,7 @@ int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
     if(e->type == SDL_MOUSEBUTTONDOWN){
         SDL_GetMouseState(&x, &y);
 		if( x > buttonPos.x && x < buttonPos.x + buttonPos.w &&
-            y > buttonPos.y &&  y < buttonPos.y + buttonPos.h){
+            y > buttonPos.y && y < buttonPos.y + buttonPos.h){
 			return 1 - choice;
 		}
     }
@@ -105,7 +103,7 @@ int renderButtons(button buttonArray[], int count, SDL_Renderer *renderer, battl
     for(i = 0; i < count -1; i++){
         attack += choice[i] * 10 ^ i;
     }
-    pState = PLAYERACTION;
+    *pState = PLAYERACTION;
     return attack;
 }
 
@@ -116,7 +114,6 @@ void freeButtons(button *buttonArray, int buttons)
         for(j = 0; j < 2; j++){
             SDL_DestroyTexture(buttonArray[i].buttonTex[j]);
             SDL_FreeSurface(buttonArray[i].buttonSur[j]);
-            free(buttonArray[i].buttonTex[j]);
             free(buttonArray[i].buttonSur[j]);
         }
     }
@@ -128,5 +125,21 @@ void closeDisplay(display *d)
     SDL_DestroyWindow(d->win);
     SDL_Quit();
     free(d);
+    return;
+}
+
+
+
+
+
+void testDisplay()
+{
+    display *d = createDisplay(1080, 720);
+    button buttonArray[BUTTONS];
+    battleState state = PLAYERINPUT;
+
+    createButtons(buttonArray, d->ren);
+    renderButtons(buttonArray, BUTTONS, d->ren, &state);
+    closeDisplay(d);
     return;
 }

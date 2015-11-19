@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "play.h"
-#include "SDL.h"
+#include <SDL.h>
 
 #define WIDTH 1080
 #define HEIGHT 720
