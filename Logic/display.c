@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include "SDL.h"
 #include "display.h"
 #include <stdio.h>
 #define BUTTONS 3
@@ -7,10 +7,14 @@
 
 display *createDisplay(int width, int height)
 {
+    SDL_Init(SDL_INIT_VIDEO);
+    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        exit(1);
+    }
     display *d = (display *)malloc(sizeof(display));
     d->width = width;
     d->height = height;
-    SDL_Init(SDL_INIT_EVERYTHING);
     d->win = NULL;
     d->ren = NULL;
     d->win = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, d->width, d->height, 0);

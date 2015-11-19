@@ -4,6 +4,7 @@ enum boolean {false, true};
 #define HEIGHT 720
 #define BUTTONS 3
 
+/* This structure is for the player input buttons. the rectanlge is used to create the loction the buttons will appear. textures are a renderer are being used.*/
 typedef struct button{
     SDL_Rect buttonPos;
     SDL_Texture *buttonTex[2];
@@ -14,13 +15,13 @@ int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 void createButtons(button buttonArray[], int count, SDL_Renderer *renderer);
 int renderButtons(button buttonArray[], int count, SDL_Renderer *renderer);
 
-int main(void)
+int main(void
 {
+	/* Window and renderer can be moved out of this function and put into a function where we first create a display */
     int i, j, attack;
     button buttonArray[BUTTONS];
     SDL_Window *win = NULL;
     SDL_Renderer *renderer = NULL;
-
 
 
     SDL_Init(SDL_INIT_VIDEO);
@@ -29,12 +30,12 @@ int main(void)
     createButtons(buttonArray, BUTTONS, renderer);
 
 
-
+    /*This function puts the buttons on the screen and captures which buttons you player   presses*/
     attack = renderButtons(buttonArray, BUTTONS, renderer);
 
 
 
-
+    /* This part frees all surfaces and textures. A lot of this can be moved to a different function */
     SDL_DestroyRenderer(renderer);
     for(i = 0; i < 3; i++){
         for(j = 0; j < 2; j++){
@@ -46,7 +47,7 @@ int main(void)
     SDL_Quit();
     return 0;
 }
-
+/* Checks for the left mouse button being clicked and checks where on the screen it was pressed, if over a button it toggles the button's state. */
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
 {
 	int x, y;
@@ -65,7 +66,7 @@ void createButtons(button buttonArray[], int count, SDL_Renderer *renderer)
     int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
     char offFile[15], onFile[15];
-
+    // Sets the positions of the buttons 
     buttonFiles = fopen("buttonFiles.txt", "r");
 	for(i = 0; i < count; i++){
 		buttonArray[i].buttonPos.w = w;
@@ -77,7 +78,7 @@ void createButtons(button buttonArray[], int count, SDL_Renderer *renderer)
         else{
     		buttonArray[i].buttonPos.x = x + (w + 10) * i;
         }
-
+        // Buttons images are read from a file of files
         if(fscanf(buttonFiles, "%s %s", offFile, onFile) == 2){
             printf("%s %s\n",offFile, onFile);
             buttonArray[i].buttonSur[0] = SDL_LoadBMP(offFile);

@@ -1,4 +1,4 @@
-#include <SDL.h>
+#include "SDL.h"
 #include "display.h"
 #include <stdio.h>
 #define BUTTONS 3
@@ -10,12 +10,11 @@ display *createDisplay(int width, int height)
     display *d = (display *)malloc(sizeof(display));
     d->width = width;
     d->height = height;
-    SDL_Init(SDL_INIT_EVERYTHING);
     d->win = NULL;
     d->ren = NULL;
     d->win = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, d->width, d->height, 0);
     if(d->win == NULL){
-        fprintf(stderr, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
+        fprintf(stderr, "Window could not be created! SDL_Error: %s.\n", SDL_GetError());
         exit(1);
     }
     d->ren = SDL_CreateRenderer(d->win, -1, SDL_RENDERER_ACCELERATED);
@@ -134,6 +133,11 @@ void closeDisplay(display *d)
 
 void testDisplay()
 {
+    SDL_Init(SDL_INIT_VIDEO);
+    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        exit(1);
+    }
     display *d = createDisplay(1080, 720);
     button buttonArray[BUTTONS];
     battleState state = PLAYERINPUT;
