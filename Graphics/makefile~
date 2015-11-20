@@ -15,5 +15,4 @@ clean:
 
 run: all
 	$(TARGET) 
-try:
-	$(CC) try.c -o try $(CFLAGS) $(LIBS)
+

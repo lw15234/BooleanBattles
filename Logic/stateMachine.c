@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "stateMachine.h"
-#include <SDL.h>
 
 void runStateMachine(int playerHealth, int abilities, display *d)
 {
@@ -10,16 +9,16 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     enemy* pEnemy = &newEnemy;
     int attack = 0, enemyHealth, result = 0;
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
-    button *buttonArray = NULL;
+    button buttonArray[3];
 
     while(result == 0){
         switch(currentState){
             case START:
-                createButtons(buttonArray, abilities + 1, d->ren);
+                createButtons(buttonArray, d);
                 newEnemy = createEnemy(pState, pEnemyHealth);
                 break;
             case PLAYERINPUT:
-                attack = renderButtons(buttonArray, abilities + 1, d->ren, pState);
+                attack = renderButtons(buttonArray, abilities + 1, d, pState);
                 break;
             case PLAYERACTION:
                 damageState(attack, pEnemy, pPlayerHealth, pEnemyHealth, pState);

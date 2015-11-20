@@ -5,9 +5,12 @@
 
 
 
+
+int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
+
+
 display *createDisplay(int width, int height)
 {
-    SDL_Init(SDL_INIT_VIDEO);
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
         fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
         exit(1);
@@ -24,11 +27,10 @@ display *createDisplay(int width, int height)
     }
     d->ren = SDL_CreateRenderer(d->win, -1, SDL_RENDERER_ACCELERATED);
     SDL_RenderPresent(d->ren);
-
     return d;
 }
 
-void createButtons(button buttonArray[], SDL_Renderer *renderer)
+void createButtons(button buttonArray[], display *d)
 {
     int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
@@ -53,9 +55,9 @@ void createButtons(button buttonArray[], SDL_Renderer *renderer)
             buttonArray[i].buttonSur[0] = SDL_LoadBMP(offFile);
             buttonArray[i].buttonSur[1] = SDL_LoadBMP(onFile);
             buttonArray[i].buttonTex[0] = 
-                SDL_CreateTextureFromSurface(renderer, buttonArray[i].buttonSur[0]);
+                SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[0]);
             buttonArray[i].buttonTex[1] = 
-                SDL_CreateTextureFromSurface(renderer, buttonArray[i].buttonSur[1]);
+                SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[1]);
         }
         else{
             printf("Could not find files\n");
@@ -66,6 +68,7 @@ void createButtons(button buttonArray[], SDL_Renderer *renderer)
 }
 
 /* Checks for the left mouse button being clicked and checks where on the screen it was pressed, if over a button it toggles the button's state. */
+
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
 {
 	int x, y;
@@ -79,7 +82,7 @@ int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
     return choice;
 }
 
-int renderButtons(button buttonArray[], int count, SDL_Renderer *renderer, battleState *pState)
+int renderButtons(button buttonArray[], int count, display *d, battleState *pState)
 {
     int i, run = 1, attack = 0;
     int choice[BUTTONS] = {0};
@@ -97,12 +100,12 @@ int renderButtons(button buttonArray[], int count, SDL_Renderer *renderer, battl
             }
         }
         //Renders the button the the user has selected
-        SDL_RenderClear(renderer);
+        SDL_RenderClear(d->ren);
         for(i = 0; i < count; i++){
-            SDL_RenderCopy(renderer, buttonArray[i].buttonTex[choice[i]], NULL, 
+            SDL_RenderCopy(d->ren, buttonArray[i].buttonTex[choice[i]], NULL, 
                 &buttonArray[i].buttonPos);
         }
-        SDL_RenderPresent(renderer);
+        SDL_RenderPresent(d->ren);
     }
     for(i = 0; i < count -1; i++){
         attack += choice[i] * 10 ^ i;
@@ -139,11 +142,14 @@ void closeDisplay(display *d)
 void testDisplay()
 {
     display *d = createDisplay(1080, 720);
+
     button buttonArray[BUTTONS];
     battleState state = PLAYERINPUT;
 
-    createButtons(buttonArray, d->ren);
-    renderButtons(buttonArray, BUTTONS, d->ren, &state);
+    createButtons(buttonArray, d);
+    renderButtons(buttonArray, BUTTONS, d, &state);
+
     closeDisplay(d);
+
     return;
 }

@@ -5,11 +5,11 @@
 #define ATTACKCOMBOS 8
 #define FILLER -99
 
-typedef struct enemy{
+struct enemy{
     int weakness[ATTACKCOMBOS];
     int solutions;
     char* equation;
-}enemy;
+};
 
 struct enemy createEnemy(battleState* pState, int* pEnemyHealth);
 void fillWeaknessArray(enemy* pEnemy, int weaknesses[]);

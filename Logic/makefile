@@ -33,13 +33,10 @@ damage:
 	./booleanBattles
 display:
 	$(CC) $(DISPLAY) $(TEST) -DRUN=testDisplay -o $(TARGET) $(CFLAGS) $(LIBS)
-	./booleanBattles
 stateMachine:
-	$(CC) -DRUN=runStateMachine $(STATEMACHINE)
-	./booleanBattles
+	$(CC) $(STATEMACHINE) $(TEST) -DRUN=runStateMachine -o $(TARGET) $(CFLAGS) $(LIBS)
 play:
-	$(CC) $(STATEMACHINE)
-	./booleanBattles
+	$(CC) $(PLAY) -o $(TARGET) $(CFLAGS) $(LIBS)
 
 
 clean:
