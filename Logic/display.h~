@@ -1,4 +1,5 @@
 #include "damage.h"
+#include "SDL.h"
 
 typedef struct display display;
 typedef struct button button;

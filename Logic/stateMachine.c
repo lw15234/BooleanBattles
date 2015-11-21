@@ -14,7 +14,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     while(result == 0){
         switch(currentState){
             case START:
-                createButtons(buttonArray, d);
+                createButtons(buttonArray, abilities + 1, d);
                 newEnemy = createEnemy(pState, pEnemyHealth);
                 break;
             case PLAYERINPUT:

@@ -9,12 +9,12 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     enemy* pEnemy = &newEnemy;
     int attack = 0, enemyHealth, result = 0;
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
-    button buttonArray = NULL;
+    button buttonArray[3];
 
     while(result == 0){
         switch(currentState){
             case START:
-                createButtons(buttonArray, d);
+                createButtons(buttonArray, abilities +1, d);
                 newEnemy = createEnemy(pState, pEnemyHealth);
                 break;
             case PLAYERINPUT:

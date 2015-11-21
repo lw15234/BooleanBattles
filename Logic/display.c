@@ -1,7 +1,7 @@
 #include "SDL.h"
 #include "display.h"
 #include <stdio.h>
-#define BUTTONS 3
+#define BUTTONS 4
 
 
 
@@ -30,20 +30,20 @@ display *createDisplay(int width, int height)
     return d;
 }
 
-void createButtons(button buttonArray[], display *d)
+void createButtons(button buttonArray[], int abilities, display *d)
 {
     int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
-    char offFile[15], onFile[15];
+    char offFile[25], onFile[25];
 
     
     // Sets the positions of the buttons 
-    buttonFiles = fopen("buttonFiles.txt", "r");
-	for(i = 0; i < BUTTONS; i++){
+    buttonFiles = fopen("buttonsFile.txt", "r");
+    for(i = 0; i < abilities; i++){
 		buttonArray[i].buttonPos.w = w;
 		buttonArray[i].buttonPos.h = h;
 		buttonArray[i].buttonPos.y = y;
-        if(i == BUTTONS - 1){
+        if(i == abilities - 1){
     		buttonArray[i].buttonPos.x = x + (w + 50) * i;
         }
         else{
@@ -121,10 +121,8 @@ void freeButtons(button *buttonArray, int buttons)
         for(j = 0; j < 2; j++){
             SDL_DestroyTexture(buttonArray[i].buttonTex[j]);
             SDL_FreeSurface(buttonArray[i].buttonSur[j]);
-            free(buttonArray[i].buttonSur[j]);
         }
     }
-    free(buttonArray);
 }
 
 void closeDisplay(display *d)
@@ -146,8 +144,8 @@ void testDisplay()
     button buttonArray[BUTTONS];
     battleState state = PLAYERINPUT;
 
-    createButtons(buttonArray, d);
-    renderButtons(buttonArray, BUTTONS, d, &state);
+    createButtons(buttonArray, 4, d);
+    renderButtons(buttonArray, 4, d, &state);
 
     closeDisplay(d);
 
