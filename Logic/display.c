@@ -1,6 +1,7 @@
 #include "SDL.h"
 #include "display.h"
 #include <stdio.h>
+#include <math.h>
 #define BUTTONS 4
 
 
@@ -108,7 +109,7 @@ int renderButtons(button buttonArray[], int count, display *d, battleState *pSta
         SDL_RenderPresent(d->ren);
     }
     for(i = 0; i < count -1; i++){
-        attack += choice[i] * 10 ^ i;
+        attack += choice[i] * pow(10, i);
     }
     *pState = PLAYERACTION;
     return attack;

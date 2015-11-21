@@ -19,6 +19,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
                 break;
             case PLAYERINPUT:
                 attack = renderButtons(buttonArray, abilities + 1, d, pState);
+printf("%d\n", attack);
                 break;
             case PLAYERACTION:
                 damageState(attack, pEnemy, pPlayerHealth, pEnemyHealth, pState);
@@ -33,6 +34,5 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     }
 
     freeButtons(buttonArray, abilities + 1);
-
     return;
 }
