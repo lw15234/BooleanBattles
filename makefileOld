@@ -1,0 +1,38 @@
+CFLAGS = `sdl2-config --cflags` -O4 -Wall -Wextra -Wfloat-equal -pedantic -std=c99 -lm
+TARGET = booleanBattles
+SOURCES = $(TARGET).c
+LIBS =  `sdl2-config --libs`
+CC = gcc
+
+
+BASE = base.c
+ENEMY = $(BASE) enemy.c
+CHECKATTACK = $(ENEMY) checkAttack.c
+DAMAGE = $(CHECKATTACK) damage.c
+DISPLAY = $(DAMAGE) display.c
+STATEMACHINE = $(DISPLAY) stateMachine.c
+PLAY = $(STATEMACHINE) play.c
+
+
+
+base:
+	$(SOURCES) $(INCS)
+	$(CC) -DRUN=testEnemy $(BASE) -o $(TARGET) $(CFLAGS) $(LIBS)
+enemy:
+	$(SOURCES) $(INCS)
+	$(CC) -DRUN=testEnemy $(ENEMY) -o $(TARGET) $(CFLAGS) $(LIBS)
+checkAttack:
+	$(SOURCES) $(INCS)
+	$(CC) -DRUN=testEnemy $(CHECKATTACK) -o $(TARGET) $(CFLAGS) $(LIBS)
+damage:
+	$(SOURCES) $(INCS)
+	$(CC) -DRUN=testEnemy $(DAMAGE) -o $(TARGET) $(CFLAGS) $(LIBS)
+testInput:
+	$(SOURCES) $(INCS)
+	$(CC) -DRUN=testEnemy $(DISPLAY) -o $(TARGET) $(CFLAGS) $(LIBS)
+stateMachine:
+	$(SOURCES) $(INCS)
+	$(CC) -DRUN=testEnemy $(STATEMACHINE) -o $(TARGET) $(CFLAGS) $(LIBS)
+play:
+	$(SOURCES) $(INCS)
+	$(CC) -DRUN=testEnemy $(PLAY) -o $(TARGET) $(CFLAGS) $(LIBS)

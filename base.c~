@@ -1,9 +1,0 @@
-#include "base.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-void succeed(char *message) {
-  
-
-
-

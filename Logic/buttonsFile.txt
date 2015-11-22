@@ -1,0 +1,8 @@
+offFire.bmp
+onFire.bmp
+offIce.bmp
+onIce.bmp
+offLightning.bmp
+onLightning.bmp
+offAttack.bmp
+onAttack.bmp

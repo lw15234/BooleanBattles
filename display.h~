@@ -1,0 +1,8 @@
+#include "damage.h"
+
+display *createDisplay(int width, int height);
+void createButtons(button buttonArray[], int count, SDL_Renderer *renderer);
+int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
+int renderButtons(button buttonArray[], int count, SDL_Renderer *renderer);
+void freeButtons(button *buttonArray, int buttons);
+void closeDisplay(display *d);
