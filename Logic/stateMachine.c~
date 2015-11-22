@@ -11,6 +11,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
     button buttonArray[3];
 
+printf("%d\n", playerHealth);
     while(result == 0){
         switch(currentState){
             case START:
@@ -31,7 +32,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
                 break;
         }
     }
-
     freeButtons(buttonArray, abilities + 1);
+printf("%d\n", playerHealth);
     return;
 }

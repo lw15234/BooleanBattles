@@ -11,6 +11,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
     button buttonArray[3];
 
+printf("%d\n", playerHealth);
     while(result == 0){
         switch(currentState){
             case START:
@@ -19,10 +20,9 @@ void runStateMachine(int playerHealth, int abilities, display *d)
                 break;
             case PLAYERINPUT:
                 attack = renderButtons(buttonArray, abilities + 1, d, pState);
-printf("%d\n", attack);
                 break;
             case PLAYERACTION:
-                damageState(attack, pEnemy, pPlayerHealth, pEnemyHealth, pState);
+                damageState(attack, pEnemy, pEnemyHealth, pPlayerHealth, pState);
                 break;
             case WIN:
                 result = 1;
@@ -32,7 +32,7 @@ printf("%d\n", attack);
                 break;
         }
     }
-
     freeButtons(buttonArray, abilities + 1);
+printf("%d\n", playerHealth);
     return;
 }

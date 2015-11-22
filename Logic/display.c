@@ -35,11 +35,11 @@ void createButtons(button buttonArray[], int abilities, display *d)
 {
     int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
-    char offFile[25], onFile[25];
+    char offFile[30], onFile[30];
 
     
     // Sets the positions of the buttons 
-    buttonFiles = fopen("buttonsFile.txt", "r");
+    buttonFiles = fopen("buttonFiles.txt", "r");
     for(i = 0; i < abilities; i++){
 		buttonArray[i].buttonPos.w = w;
 		buttonArray[i].buttonPos.h = h;
@@ -64,7 +64,7 @@ void createButtons(button buttonArray[], int abilities, display *d)
             printf("Could not find files\n");
             exit(1);
         }
-	}
+    }
     fclose(buttonFiles);
 }
 
