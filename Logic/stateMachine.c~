@@ -22,7 +22,7 @@ printf("%d\n", playerHealth);
                 attack = renderButtons(buttonArray, abilities + 1, d, pState);
                 break;
             case PLAYERACTION:
-                damageState(attack, pEnemy, pPlayerHealth, pEnemyHealth, pState);
+                damageState(attack, pEnemy, pEnemyHealth, pPlayerHealth, pState);
                 break;
             case WIN:
                 result = 1;

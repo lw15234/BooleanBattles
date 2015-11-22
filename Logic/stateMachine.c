@@ -9,7 +9,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     enemy* pEnemy = &newEnemy;
     int attack = 0, enemyHealth, result = 0;
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
-    button buttonArray[3];
+    button buttonArray[4];
 
 printf("%d\n", playerHealth);
     while(result == 0){
@@ -33,6 +33,5 @@ printf("%d\n", playerHealth);
         }
     }
     freeButtons(buttonArray, abilities + 1);
-printf("%d\n", playerHealth);
     return;
 }
