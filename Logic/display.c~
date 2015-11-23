@@ -64,7 +64,7 @@ void createButtons(button buttonArray[], int abilities, display *d)
             printf("Could not find files\n");
             exit(1);
         }
-	}
+    }
     fclose(buttonFiles);
 }
 
