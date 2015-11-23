@@ -6,6 +6,8 @@ CC = gcc
 
 # Set up the linear sequence of modules, in dependency order
 TEST = booleanBattles.c
+TESTINPUT = input.c
+
 BASE = base.c
 ENEMY = $(BASE) enemy.c
 CHECKATTACK = $(ENEMY) checkAttack.c

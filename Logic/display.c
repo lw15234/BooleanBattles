@@ -39,7 +39,7 @@ void createButtons(button buttonArray[], int abilities, display *d)
 
     
     // Sets the positions of the buttons 
-    buttonFiles = fopen("buttonFiles.txt", "r");
+    buttonFiles = fopen("buttons/buttonFiles.txt", "r");
     for(i = 0; i < abilities; i++){
 		buttonArray[i].buttonPos.w = w;
 		buttonArray[i].buttonPos.h = h;
