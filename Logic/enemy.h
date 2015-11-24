@@ -10,9 +10,9 @@
 /*Contains information for our enemy/level*/
 typedef struct enemy{
     int weakness[ATTACKCOMBOS];
-    int solutions;
+    int health;
     char* equation;
 }enemy;
 
 /*Create an enemy structure*/
-struct enemy *createEnemy(battleState* pState, int* pEnemyHealth);
+struct enemy *createEnemy(battleState* pState);

@@ -47,6 +47,5 @@ void testCheckAttack()
             fail("Correct attack check failed.");
         }
     }
-    free(newEnemy);
     succeed("CheckAttack ok");
 }
