@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "stateMachine.h"
 
-void runStateMachine(int playerHealth, int abilities, display *d)
+void runStateMachine(int *playerHealth, int abilities, display *d)
 {
     battleState currentState = START;
     battleState* pState = &currentState;
@@ -9,7 +9,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
     enemy* pEnemy = &newEnemy;
     int attack = 0, enemyHealth, result = 0;
-    int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
+    int *pEnemyHealth = &enemyHealth;
     button *buttonArray = NULL;
 
 
@@ -26,7 +26,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
                 attack = renderButtons(buttonArray, abilities, d, pState, battle);
                 break;
             case PLAYERACTION:
-                damageState(attack, pEnemy, pEnemyHealth, pPlayerHealth, pState);
+                damageState(attack, pEnemy, pEnemyHealth, playerHealth, pState);
                 break;
             case WIN:
                 result = 1;

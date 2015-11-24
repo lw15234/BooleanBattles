@@ -17,7 +17,7 @@ void runStateMachine(int playerHealth, int abilities, display *d)
         switch(currentState){
             case START:
                 createBattle(d, battle);
-                createButtons(buttonArray, abilities, d);
+                buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
                 SDL_RenderPresent(d->ren);
                 newEnemy = createEnemy(pState, pEnemyHealth);

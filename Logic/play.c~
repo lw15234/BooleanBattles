@@ -9,9 +9,10 @@
 
 int main(void)
 {
+    int playerHealth = 3;
+
     display *d = createDisplay(WIDTH, HEIGHT);
-    runStateMachine(PLAYERHEALTH, ABILITIES, d);
-printf("seg\n");
+    runStateMachine(&playerHealth, ABILITIES, d);
     closeDisplay(d);
 
     return 0;
