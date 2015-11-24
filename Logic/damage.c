@@ -101,7 +101,7 @@ int subTestDamage(int attack, int* pTurns)
     int *pPlayerHealth = &playerHealth;
     battleState currentState;
     battleState* pState = &currentState;
-    enemy *newEnemy = createEnemy(pState, 8);
+    enemy *newEnemy = createEnemy(8);
     while(result == 0){
         result = damageState(attack, newEnemy, pPlayerHealth, pState);
         (*pTurns)++;

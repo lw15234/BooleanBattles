@@ -4,12 +4,14 @@
 
 /*The total number of possible attacks*/
 #define ATTACKCOMBOS 8
+/*Number of levels*/
+#define LEVELS 10
 
 /*Contains information for our enemy/level*/
 typedef struct enemy{
     int abilities;
     int health;
-    char[30] equation;
+    char equation[30];
     int weakness[ATTACKCOMBOS];
 }enemy;
 

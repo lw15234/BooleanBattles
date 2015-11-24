@@ -4,5 +4,3 @@ buttons/offIce.bmp
 buttons/onIce.bmp
 buttons/offLightning.bmp
 buttons/onLightning.bmp
-buttons/offAttack.bmp
-buttons/onAttack.bmp

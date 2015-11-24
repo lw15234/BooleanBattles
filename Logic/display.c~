@@ -4,7 +4,11 @@
 #include <math.h>
 #define BUTTONS 4
 
-
+struct button{
+    SDL_Rect buttonPos;
+    SDL_Texture *buttonTex[2];
+    SDL_Surface *buttonSur[2];
+};
 
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 
@@ -47,24 +51,31 @@ button *createButtons(int abilities, display *d)
         buttonArray[i].buttonPos.h = h;
         buttonArray[i].buttonPos.y = y;
         if(i == abilities){
-            buttonArray[i].buttonPos.x = x + (w + 50) * i;
-        }
-        else{
-            buttonArray[i].buttonPos.x = x + (w + 10) * i;
-        }
-        // Buttons images are read from a file of files
-        if(fscanf(buttonFiles, "%s %s", offFile, onFile) == 2){
-            buttonArray[i].buttonSur[0] = SDL_LoadBMP(offFile);
-            buttonArray[i].buttonSur[1] = SDL_LoadBMP(onFile);
+            buttonArray[i].buttonPos.x = x + (w + 50) * 4;
+            buttonArray[i].buttonSur[0] = SDL_LoadBMP("buttons/offAttack.bmp");
+            buttonArray[i].buttonSur[1] = SDL_LoadBMP("buttons/onAttack.bmp");
             buttonArray[i].buttonTex[0] = 
                 SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[0]);
             buttonArray[i].buttonTex[1] = 
                 SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[1]);
         }
         else{
-            printf("Could not find files\n");
-            exit(1);
+            buttonArray[i].buttonPos.x = x + (w + 10) * i;
+            if(fscanf(buttonFiles, "%s %s", offFile, onFile) == 2){
+                buttonArray[i].buttonSur[0] = SDL_LoadBMP(offFile);
+                buttonArray[i].buttonSur[1] = SDL_LoadBMP(onFile);
+                buttonArray[i].buttonTex[0] = 
+                    SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[0]);
+                buttonArray[i].buttonTex[1] = 
+                    SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[1]);
+            }
+            else{
+                printf("Could not find files\n");
+                exit(1);
+            }
         }
+        // Buttons images are read from a file of files
+        
     }
     fclose(buttonFiles);
     return buttonArray;

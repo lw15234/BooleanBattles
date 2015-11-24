@@ -4,6 +4,8 @@
 
 /*The total number of possible attacks*/
 #define ATTACKCOMBOS 8
+/*Number of levels*/
+#define LEVELS 10
 
 /*Contains information for our enemy/level*/
 typedef struct enemy{
@@ -14,4 +16,4 @@ typedef struct enemy{
 }enemy;
 
 /*Create an enemy structure*/
-struct enemy *createEnemy(battleState* pState, int level);
+struct enemy *createEnemy(int level);

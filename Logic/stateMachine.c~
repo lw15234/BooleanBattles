@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include "stateMachine.h"
 
-void runStateMachine(int *playerHealth, int abilities, display *d)
+int runStateMachine(int *playerHealth, int currentLevel, display *d)
 {
     battleState currentState = START;
     battleState* pState = &currentState;
     enemy *newEnemy = NULL;
     currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
-    int attack = 0, result = 0;
+    int attack = 0, result = 0, abilities = 0;
     button *buttonArray = NULL;
 
 
@@ -15,10 +15,14 @@ void runStateMachine(int *playerHealth, int abilities, display *d)
         switch(currentState){
             case START:
                 createBattle(d, battle);
+                newEnemy = createEnemy(currentLevel);
+                printf("%d\n", *playerHealth);
+                printf("%s\n", newEnemy->equation);
+                abilities = newEnemy->abilities;
                 buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
                 SDL_RenderPresent(d->ren);
-                newEnemy = createEnemy(pState);
+                currentState = PLAYERINPUT;
                 break;
             case PLAYERINPUT:
                 attack = renderButtons(buttonArray, abilities, d, pState, battle);
@@ -36,5 +40,5 @@ void runStateMachine(int *playerHealth, int abilities, display *d)
     }
     freeButtons(buttonArray, abilities + 1);
     free(newEnemy);
-    return;
+    return result;
 }

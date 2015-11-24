@@ -23,7 +23,7 @@ void testCheckAttack()
     int results[ATTACKCOMBOS];
     battleState currentState;
     battleState* pState = &currentState;
-    enemy *newEnemy = createEnemy(pState);
+    enemy *newEnemy = createEnemy(pState, 8);
     l = 0;
 
     for(i = 0; i <= 1; i++){

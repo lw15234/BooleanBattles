@@ -13,9 +13,9 @@ void fillWeaknessArray(enemy* newEnemy, int weaknesses[]);
 
 
 /*Create an enemy structure*/
-struct enemy *createEnemy(battleState* pState, int level)
+struct enemy *createEnemy(int level)
 {
-    enemy enemyArray[] = {
+    enemy enemyArray[LEVELS] = {
         {1, 1, "F",                     {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
         {1, 1, "!F",                    {  0,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
         {1, 1, "!!F",                   {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
@@ -33,7 +33,6 @@ struct enemy *createEnemy(battleState* pState, int level)
     newEnemy->health = enemyArray[level].health;
     strcpy(newEnemy->equation, enemyArray[level].equation);
     fillWeaknessArray(newEnemy, enemyArray[level].weakness);
-    *pState = PLAYERINPUT;
     return newEnemy;
 }
 
@@ -62,10 +61,8 @@ void fillWeaknessFiller(enemy* newEnemy)
 void testEnemy()
 {
     int i;
-    enemy *newEnemy;
-    battleState currentState;
-    battleState* pState = &currentState;
-    newEnemy = createEnemy(pState, 8);
+    enemy *newEnemy = createEnemy(8);
+
     if(newEnemy->weakness[0] != 101){
         fail("Weakness 0 set incorrectly");
     }
@@ -88,9 +85,6 @@ void testEnemy()
         if(newEnemy->weakness[i] != FILLER){
             fail("Filler weakness not set");
         }
-    }
-    if(*pState != PLAYERINPUT){
-        fail("State not set");
     }
     free(newEnemy);
     succeed("Enemy module ok");
