@@ -6,11 +6,7 @@ typedef struct button button;
 typedef struct currentBattle currentBattle;
 typedef struct entity entity;
 
-struct button{
-    SDL_Rect buttonPos;
-    SDL_Texture *buttonTex[2];
-    SDL_Surface *buttonSur[2];
-};
+
 struct display{
     int width, height;
     SDL_Window *win;
@@ -34,7 +30,7 @@ struct entity{
 
 
 display *createDisplay(int width, int height);
-void createButtons(button *buttonArray, int abilities, display *d);
+button *createButtons(int abilities, display *d);
 int renderButtons(button *buttonArray, int abilities, display *d, battleState *pState, currentBattle *battle);
 void freeButtons(button *buttonArray, int buttons);
 void closeDisplay(display *d);

@@ -4,7 +4,11 @@
 #include <math.h>
 #define BUTTONS 4
 
-
+struct button{
+    SDL_Rect buttonPos;
+    SDL_Texture *buttonTex[2];
+    SDL_Surface *buttonSur[2];
+};
 
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 
@@ -32,11 +36,12 @@ display *createDisplay(int width, int height)
 }
 
 /*Create input buttons for player*/
-void createButtons(button buttonArray[], int abilities, display *d)
+button *createButtons(int abilities, display *d)
 {
     int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
     char offFile[30], onFile[30];
+    button *buttonArray = malloc((abilities + 1) * sizeof(button));
 
     
     // Sets the positions of the buttons 
@@ -66,6 +71,7 @@ void createButtons(button buttonArray[], int abilities, display *d)
         }
     }
     fclose(buttonFiles);
+    return buttonArray;
 }
 
 /*Checks for the left mouse button being clicked and checks where on the screen
@@ -126,6 +132,7 @@ void freeButtons(button *buttonArray, int buttons)
             SDL_FreeSurface(buttonArray[i].buttonSur[j]);
         }
     }
+    free(buttonArray);
 }
 
 /*Free memory used by display and close*/
@@ -173,10 +180,10 @@ void testDisplay()
     currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
     display *d = createDisplay(1080, 720);
 
-    button buttonArray[BUTTONS];
+    button *buttonArray;
     battleState state = PLAYERINPUT;
 
-    createButtons(buttonArray, 3, d);
+    buttonArray = createButtons(3, d);
     renderButtons(buttonArray, 3, d, &state, battle);
 
     closeDisplay(d);

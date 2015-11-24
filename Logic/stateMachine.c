@@ -10,14 +10,14 @@ void runStateMachine(int playerHealth, int abilities, display *d)
     enemy* pEnemy = &newEnemy;
     int attack = 0, enemyHealth, result = 0;
     int *pEnemyHealth = &enemyHealth, *pPlayerHealth = &playerHealth;
-    button buttonArray[4];
+    button *buttonArray = NULL;
 
 
     while(result == 0){
         switch(currentState){
             case START:
                 createBattle(d, battle);
-                createButtons(buttonArray, abilities, d);
+                buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
                 SDL_RenderPresent(d->ren);
                 newEnemy = createEnemy(pState, pEnemyHealth);
