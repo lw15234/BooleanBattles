@@ -4,7 +4,7 @@
 #include <math.h>
 #define BUTTONS 4
 
-/*A struct to contain our display*/
+
 
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 
@@ -41,11 +41,11 @@ void createButtons(button buttonArray[], int abilities, display *d)
     
     // Sets the positions of the buttons 
     buttonFiles = fopen("buttons/buttonFiles.txt", "r");
-    for(i = 0; i < abilities; i++){
+    for(i = 0; i < abilities + 1; i++){
         buttonArray[i].buttonPos.w = w;
         buttonArray[i].buttonPos.h = h;
         buttonArray[i].buttonPos.y = y;
-        if(i == abilities - 1){
+        if(i == abilities){
             buttonArray[i].buttonPos.x = x + (w + 50) * i;
         }
         else{
@@ -84,7 +84,7 @@ int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
 }
 
 /*Display our buttons on screen until Attack button is pressed*/
-int renderButtons(button buttonArray[], int count, display *d, battleState *pState, currentBattle *battle)
+int renderButtons(button buttonArray[], int abilities, display *d, battleState *pState, currentBattle *battle)
 {
     int i, run = 1, attack = 0;
     int choice[BUTTONS] = {0};
@@ -94,22 +94,22 @@ int renderButtons(button buttonArray[], int count, display *d, battleState *pSta
             if(event.type == SDL_QUIT){
                 run = 0;
             }
-            for(i = 0; i < count; i++){
+            for(i = 0; i < abilities + 1; i++){
                 choice[i] = pressButton(&event, choice[i], buttonArray[i].buttonPos);
             }
-            if(choice[count - 1] == 1){
+            if(choice[abilities] == 1){
                 run = 0;
             }
         }
         //Renders the button the the user has selected
         RenderRefresh(d, battle);
-        for(i = 0; i < count; i++){
+        for(i = 0; i < abilities + 1; i++){
             SDL_RenderCopy(d->ren, buttonArray[i].buttonTex[choice[i]], NULL, 
                 &buttonArray[i].buttonPos);
         }
         SDL_RenderPresent(d->ren);
     }
-    for(i = 0; i < count -1; i++){
+    for(i = 0; i < abilities; i++){
         attack += choice[i] * pow(10, i);
     }
     *pState = PLAYERACTION;
@@ -176,8 +176,8 @@ void testDisplay()
     button buttonArray[BUTTONS];
     battleState state = PLAYERINPUT;
 
-    createButtons(buttonArray, 4, d);
-    renderButtons(buttonArray, 4, d, &state, battle);
+    createButtons(buttonArray, 3, d);
+    renderButtons(buttonArray, 3, d, &state, battle);
 
     closeDisplay(d);
     succeed("Display module ok");

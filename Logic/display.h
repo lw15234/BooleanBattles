@@ -35,7 +35,7 @@ struct entity{
 
 display *createDisplay(int width, int height);
 void createButtons(button *buttonArray, int abilities, display *d);
-int renderButtons(button *buttonArray, int count, display *d, battleState *pState, currentBattle *battle);
+int renderButtons(button *buttonArray, int abilities, display *d, battleState *pState, currentBattle *battle);
 void freeButtons(button *buttonArray, int buttons);
 void closeDisplay(display *d);
 entity *createEntity(char *filename, int x, int y, int w, int h, display *d);

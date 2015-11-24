@@ -17,13 +17,13 @@ void runStateMachine(int playerHealth, int abilities, display *d)
         switch(currentState){
             case START:
                 createBattle(d, battle);
-                createButtons(buttonArray, abilities + 1, d);
+                createButtons(buttonArray, abilities, d);
                 RenderRefresh(d, battle);
-    SDL_RenderPresent(d->ren);
+                SDL_RenderPresent(d->ren);
                 newEnemy = createEnemy(pState, pEnemyHealth);
                 break;
             case PLAYERINPUT:
-                attack = renderButtons(buttonArray, abilities + 1, d, pState, battle);
+                attack = renderButtons(buttonArray, abilities, d, pState, battle);
                 break;
             case PLAYERACTION:
                 damageState(attack, pEnemy, pEnemyHealth, pPlayerHealth, pState);

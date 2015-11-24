@@ -11,6 +11,13 @@ struct button{
     SDL_Texture *buttonTex[2];
     SDL_Surface *buttonSur[2];
 };
+struct display{
+    int width, height;
+    SDL_Window *win;
+    SDL_Surface *sur;
+    SDL_Renderer *ren;
+    SDL_Event *e;
+};
 
 struct currentBattle{
 	entity *hero; 
