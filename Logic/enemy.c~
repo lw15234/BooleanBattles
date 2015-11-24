@@ -1,5 +1,3 @@
-/*Generates information about our enemy/level*/
-
 #include "enemy.h"
 #include <string.h>
 

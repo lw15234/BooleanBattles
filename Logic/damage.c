@@ -1,12 +1,24 @@
+/*Implements damage and checks if the battle is over*/
+
 #include "damage.h"
 #include <stdio.h>
 
+
+void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth);
+int checkHealth(int enemyHealth, int playerHealth, battleState* pState);
+int loseBattle();
+int winBattle();
+int subTestDamage(int attack, int* pTurns);
+
+
+/*Runs functions for the damage state in state machine*/
 int damageState(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth, battleState* pState)
 {
     implementDamage(attack, pEnemy, enemyHealth, playerHealth);
     return checkHealth(*enemyHealth, *playerHealth, pState);
 }
 
+/*Checks if an attack was successful and damages player or enemy accordingly*/
 void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth)
 {
     if(checkAttack(attack, pEnemy)){
@@ -18,6 +30,7 @@ void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHea
     return;
 }
 
+/*Checks if the player and enemy are still alive*/
 int checkHealth(int enemyHealth, int playerHealth, battleState* pState)
 {
     if(playerHealth <= 0){
@@ -32,18 +45,21 @@ int checkHealth(int enemyHealth, int playerHealth, battleState* pState)
     return 0;
 }
 
+/*The player has lost the battle*/
 int loseBattle()
 {
     printf("You lose. Sorry :(\n");
     return -1;
 }
 
+/*The player has won the battle*/
 int winBattle()
 {
     printf("You win! Congratz!\n");
     return 1;
 }
 
+/*Test the damage module*/
 void testDamage()
 {
     int i, j, k, l = 0, turns = 0;
@@ -78,6 +94,7 @@ void testDamage()
 
 }
 
+/*Part of the test function*/
 int subTestDamage(int attack, int* pTurns)
 {
     int playerHealth = 3, enemyHealth = 3, result = 0;

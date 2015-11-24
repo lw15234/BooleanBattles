@@ -4,12 +4,19 @@
 #include <math.h>
 #define BUTTONS 4
 
-
-
+/*A struct to contain our display*/
+struct display{
+    int width, height;
+    SDL_Window *win;
+    SDL_Surface *sur;
+    SDL_Renderer *ren;
+    SDL_Event *e;
+};
 
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 
 
+/*Initialise SDL and create a new display struct*/
 display *createDisplay(int width, int height)
 {
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -31,6 +38,7 @@ display *createDisplay(int width, int height)
     return d;
 }
 
+/*Create input buttons for player*/
 void createButtons(button buttonArray[], int abilities, display *d)
 {
     int w = 100, h = 100, x = 250, y = 550, i;
@@ -41,18 +49,17 @@ void createButtons(button buttonArray[], int abilities, display *d)
     // Sets the positions of the buttons 
     buttonFiles = fopen("buttons/buttonFiles.txt", "r");
     for(i = 0; i < abilities; i++){
-		buttonArray[i].buttonPos.w = w;
-		buttonArray[i].buttonPos.h = h;
-		buttonArray[i].buttonPos.y = y;
+        buttonArray[i].buttonPos.w = w;
+        buttonArray[i].buttonPos.h = h;
+        buttonArray[i].buttonPos.y = y;
         if(i == abilities - 1){
-    		buttonArray[i].buttonPos.x = x + (w + 50) * i;
+            buttonArray[i].buttonPos.x = x + (w + 50) * i;
         }
         else{
-    		buttonArray[i].buttonPos.x = x + (w + 10) * i;
+            buttonArray[i].buttonPos.x = x + (w + 10) * i;
         }
         // Buttons images are read from a file of files
         if(fscanf(buttonFiles, "%s %s", offFile, onFile) == 2){
-            printf("%s %s\n",offFile, onFile);
             buttonArray[i].buttonSur[0] = SDL_LoadBMP(offFile);
             buttonArray[i].buttonSur[1] = SDL_LoadBMP(onFile);
             buttonArray[i].buttonTex[0] = 
@@ -68,8 +75,8 @@ void createButtons(button buttonArray[], int abilities, display *d)
     fclose(buttonFiles);
 }
 
-/* Checks for the left mouse button being clicked and checks where on the screen it was pressed, if over a button it toggles the button's state. */
-
+/*Checks for the left mouse button being clicked and checks where on the screen
+    it was pressed, if over a button it toggles the button's state.*/
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
 {
 	int x, y;
@@ -83,6 +90,7 @@ int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
     return choice;
 }
 
+/*Display our buttons on screen until Attack button is pressed*/
 int renderButtons(button buttonArray[], int count, display *d, battleState *pState)
 {
     int i, run = 1, attack = 0;
@@ -115,6 +123,7 @@ int renderButtons(button buttonArray[], int count, display *d, battleState *pSta
     return attack;
 }
 
+/*Free memory used by buttons*/
 void freeButtons(button *buttonArray, int buttons)
 {
     int i, j;    
@@ -126,6 +135,7 @@ void freeButtons(button *buttonArray, int buttons)
     }
 }
 
+/*Free memory used by display and close*/
 void closeDisplay(display *d)
 {
     SDL_DestroyWindow(d->win);
@@ -137,7 +147,7 @@ void closeDisplay(display *d)
 
 
 
-
+/*Test display module*/
 void testDisplay()
 {
     display *d = createDisplay(1080, 720);
@@ -149,6 +159,6 @@ void testDisplay()
     renderButtons(buttonArray, 4, d, &state);
 
     closeDisplay(d);
-
+    succeed("Display module ok");
     return;
 }
