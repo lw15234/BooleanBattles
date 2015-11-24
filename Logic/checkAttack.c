@@ -25,15 +25,14 @@ void testCheckAttack()
     battleState* pState = &currentState;
     int enemyHealth;
     int* pEnemyHealth = &enemyHealth;
-    enemy newEnemy = createEnemy(pState, pEnemyHealth);
-    enemy* pEnemy = &newEnemy;
+    enemy *newEnemy = createEnemy(pState, pEnemyHealth);
     l = 0;
 
     for(i = 0; i <= 1; i++){
         for(j = 0; j <= 1; j++){
             for(k = 0; k <= 1; k++){
                 attack = 100* i + 10 * j + k;
-                results[l] = checkAttack(attack, pEnemy);
+                results[l] = checkAttack(attack, newEnemy);
                 l++;
             }
         }

@@ -6,11 +6,7 @@ typedef struct button button;
 typedef struct currentBattle currentBattle;
 typedef struct entity entity;
 
-struct button{
-    SDL_Rect buttonPos;
-    SDL_Texture *buttonTex[2];
-    SDL_Surface *buttonSur[2];
-};
+
 struct display{
     int width, height;
     SDL_Window *win;

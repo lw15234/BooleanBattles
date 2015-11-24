@@ -15,4 +15,4 @@ typedef struct enemy{
 }enemy;
 
 /*Create an enemy structure*/
-struct enemy createEnemy(battleState* pState, int* pEnemyHealth);
+struct enemy *createEnemy(battleState* pState, int* pEnemyHealth);

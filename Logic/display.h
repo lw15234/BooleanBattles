@@ -16,16 +16,16 @@ struct display{
 };
 
 struct currentBattle{
-	entity *hero; 
-	entity *enemy;
-	SDL_Surface *sur;
-	SDL_Texture *tex;
+    entity *hero; 
+    entity *enemy;
+    SDL_Surface *sur;
+    SDL_Texture *tex;
 };
 
 struct entity{
-	SDL_Rect entityPos;
-	SDL_Texture *entityTex;
-	SDL_Surface *entitySur;
+    SDL_Rect entityPos;
+    SDL_Texture *entityTex;
+    SDL_Surface *entitySur;
 };
 
 

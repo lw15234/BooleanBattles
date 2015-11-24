@@ -1,5 +1,8 @@
+/*Generates information about our enemy/level*/
+
 #include "enemy.h"
 #include <string.h>
+#include <stdlib.h>
 
 
 void fillWeaknessArray(enemy* pEnemy, int weaknesses[]);
@@ -7,17 +10,15 @@ void fillWeaknessFiller(enemy* pEnemy);
 
 
 /*Create an enemy structure*/
-struct enemy createEnemy(battleState* pState, int* pEnemyHealth)
+struct enemy *createEnemy(battleState* pState, int* pEnemyHealth)
 {
-    enemy newEnemy;
-    enemy* pEnemy;
-    pEnemy = &newEnemy;
+    enemy *newEnemy = malloc(sizeof(enemy));
     int tmp[] = {101, 110, 111};
-    newEnemy.solutions = sizeof(tmp) / sizeof(tmp[0]);
-    newEnemy.equation = "(F || W) && G";
-    fillWeaknessArray(pEnemy, tmp);
-    fillWeaknessFiller(pEnemy);
-    *pEnemyHealth = newEnemy.solutions;
+    newEnemy->solutions = sizeof(tmp) / sizeof(tmp[0]);
+    newEnemy->equation = "(F || W) && G";
+    fillWeaknessArray(newEnemy, tmp);
+    fillWeaknessFiller(newEnemy);
+    *pEnemyHealth = newEnemy->solutions;
     *pState = PLAYERINPUT;
     return newEnemy;
 }
@@ -46,40 +47,39 @@ void fillWeaknessFiller(enemy* pEnemy)
 void testEnemy()
 {
     int i;
-    enemy newEnemy;
+    enemy *newEnemy;
     battleState currentState;
     battleState* pState = &currentState;
     int enemyHealth;
     int* pEnemyHealth = &enemyHealth;
     newEnemy = createEnemy(pState, pEnemyHealth);
-    if(newEnemy.weakness[0] != 101){
+    if(newEnemy->weakness[0] != 101){
         fail("Weakness 0 set incorrectly");
     }
-    if(newEnemy.weakness[1] != 110){
+    if(newEnemy->weakness[1] != 110){
         fail("Weakness 1 set incorrectly");
     }
-    if(newEnemy.weakness[2] != 111){
+    if(newEnemy->weakness[2] != 111){
         fail("Weakness 2 set incorrectly");
     }
-    if(newEnemy.solutions != 3){
+    if(newEnemy->solutions != 3){
         fail("Solutions set incorrectly");
     }
-    if(strcmp(newEnemy.equation, "(F || W) && G") != 0){
+    if(strcmp(newEnemy->equation, "(F || W) && G") != 0){
         fail("Equation set incorrectly");
     }
-    for(i = newEnemy.solutions; i < ATTACKCOMBOS; i++){
-        if(newEnemy.weakness[i] != FILLER){
+    for(i = newEnemy->solutions; i < ATTACKCOMBOS; i++){
+        if(newEnemy->weakness[i] != FILLER){
             fail("Filler weakness not set");
         }
     }
     if(*pEnemyHealth != 3){
         fail("Enemy health not set");
     }
-
     if(*pState != PLAYERINPUT){
         fail("State not set");
     }
-
+    free(enemy);
     succeed("Enemy module ok");
 }
 

@@ -94,17 +94,18 @@ void testDamage()
 
 }
 
+/*Part of the test function*/
 int subTestDamage(int attack, int* pTurns)
 {
     int playerHealth = 3, enemyHealth = 3, result = 0;
     int *pPlayerHealth = &playerHealth, *pEnemyHealth = &enemyHealth;
     battleState currentState;
     battleState* pState = &currentState;
-    enemy newEnemy = createEnemy(pState, pEnemyHealth);
-    enemy* pEnemy = &newEnemy;
+    enemy *newEnemy = createEnemy(pState, pEnemyHealth);
     while(result == 0){
-        result = damageState(attack, pEnemy, pEnemyHealth, pPlayerHealth, pState);
+        result = damageState(attack, newEnemy, pEnemyHealth, pPlayerHealth, pState);
         (*pTurns)++;
     }
+    free(newEnemy);
     return result;
 }

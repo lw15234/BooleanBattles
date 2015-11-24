@@ -1,4 +1,4 @@
-/*Retrieves or generates information about our enemy*/
+/*Generates information about our enemy/level*/
 
 #include "base.h"
 
