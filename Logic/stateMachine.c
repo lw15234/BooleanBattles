@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "stateMachine.h"
 
 int runStateMachine(int *playerHealth, int currentLevel, display *d)
@@ -6,7 +7,7 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
     battleState currentState = START;
     battleState* pState = &currentState;
     enemy *newEnemy = NULL;
-    currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
+    currentBattle *battle = NULL;
     int attack = 0, result = 0, abilities = 0;
     button *buttonArray = NULL;
 
@@ -14,7 +15,7 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
     while(result == 0){
         switch(currentState){
             case START:
-                createBattle(d, battle);
+                battle = createBattle(d);
                 newEnemy = createEnemy(currentLevel);
                 printf("Current health: %d\n", *playerHealth);
                 printf("%s\n", newEnemy->equation);
@@ -38,7 +39,9 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 break;
         }
     }
+
     freeButtons(buttonArray, abilities + 1);
+    free(battle);
     free(newEnemy);
     return result;
 }

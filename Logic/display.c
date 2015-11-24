@@ -24,6 +24,13 @@ struct entity{
     SDL_Surface *entitySur;
 };
 
+struct currentBattle{
+    entity *hero; 
+    entity *enemy;
+    SDL_Surface *sur;
+    SDL_Texture *tex;
+};
+
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 
 
@@ -55,7 +62,7 @@ button *createButtons(int abilities, display *d)
     int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
     char offFile[30], onFile[30];
-    button *buttonArray = malloc((abilities + 1) * sizeof(button));
+    button *buttonArray = (button *)malloc((abilities + 1) * sizeof(button));
 
     
     // Sets the positions of the buttons 
@@ -167,24 +174,28 @@ void closeDisplay(display *d)
 
 entity *createEntity(char *filename, int x, int y, int w, int h, display *d)
 {
-	entity *ent = (entity*)malloc(sizeof(entity));
-	ent->entityPos.x = x;
-	ent->entityPos.y = y;
-	ent->entityPos.w = w;
-	ent->entityPos.h = h;
-	ent->entitySur = SDL_LoadBMP(filename);
-	ent->entityTex = SDL_CreateTextureFromSurface(d->ren, ent->entitySur);
-	return ent;
+    entity *ent = (entity*)malloc(sizeof(entity));
+    ent->entityPos.x = x;
+    ent->entityPos.y = y;
+    ent->entityPos.w = w;
+    ent->entityPos.h = h;
+    ent->entitySur = SDL_LoadBMP(filename);
+    ent->entityTex = SDL_CreateTextureFromSurface(d->ren, ent->entitySur);
+    return ent;
 }
+
 /*Can use the level in this function to choose the background and the enemy*/
-void createBattle(display *d, currentBattle *battle)
+currentBattle *createBattle(display *d)
 {
-	
-	battle->sur = SDL_LoadBMP("background.bmp");
-	battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
-	
-	battle->hero = createEntity("hero.bmp", 100, 100, 100, 100, d);
-	battle->enemy = createEntity("hero.bmp", 500, 100, 100, 100, d);
+    currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
+
+    battle->sur = SDL_LoadBMP("background.bmp");
+    battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
+
+    battle->hero = createEntity("hero.bmp", 100, 100, 100, 100, d);
+    battle->enemy = createEntity("hero.bmp", 500, 100, 100, 100, d);
+
+    return battle;
 }
 
 void RenderRefresh(display *d, currentBattle *battle)
