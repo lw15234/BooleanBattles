@@ -97,8 +97,8 @@ void testDamage()
 /*Part of the test function*/
 int subTestDamage(int attack, int* pTurns)
 {
-    int playerHealth = 3, enemyHealth = 3, result = 0;
-    int *pPlayerHealth = &playerHealth, *pEnemyHealth = &enemyHealth;
+    int playerHealth = 3, result = 0;
+    int *pPlayerHealth = &playerHealth;
     battleState currentState;
     battleState* pState = &currentState;
     enemy *newEnemy = createEnemy(pState);

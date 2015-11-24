@@ -23,9 +23,7 @@ void testCheckAttack()
     int results[ATTACKCOMBOS];
     battleState currentState;
     battleState* pState = &currentState;
-    int enemyHealth;
-    int* pEnemyHealth = &enemyHealth;
-    enemy *newEnemy = createEnemy(pState, pEnemyHealth);
+    enemy *newEnemy = createEnemy(pState);
     l = 0;
 
     for(i = 0; i <= 1; i++){
