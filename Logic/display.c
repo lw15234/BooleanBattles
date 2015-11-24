@@ -5,13 +5,6 @@
 #define BUTTONS 4
 
 /*A struct to contain our display*/
-struct display{
-    int width, height;
-    SDL_Window *win;
-    SDL_Surface *sur;
-    SDL_Renderer *ren;
-    SDL_Event *e;
-};
 
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 
@@ -168,11 +161,10 @@ void createBattle(display *d, currentBattle *battle)
 
 void RenderRefresh(display *d, currentBattle *battle)
 {
-	SDL_RenderClear(d->ren);
-	SDL_RenderCopy(d->ren, battle->tex, NULL, NULL);
-	SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
-	SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
-        SDL_RenderPresent(d->ren);
+    SDL_RenderClear(d->ren);
+    SDL_RenderCopy(d->ren, battle->tex, NULL, NULL);
+    SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
+    SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
 }
 
 /*Test display module*/
