@@ -21,7 +21,7 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 abilities = newEnemy->abilities;
                 buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
-                SDL_RenderPresent(d->ren);
+                RenderPresent(d);
                 currentState = PLAYERINPUT;
                 break;
             case PLAYERINPUT:

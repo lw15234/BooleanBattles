@@ -7,26 +7,13 @@ typedef struct currentBattle currentBattle;
 typedef struct entity entity;
 
 
-struct display{
-    int width, height;
-    SDL_Window *win;
-    SDL_Surface *sur;
-    SDL_Renderer *ren;
-    SDL_Event *e;
-};
-
 struct currentBattle{
-	entity *hero; 
-	entity *enemy;
-	SDL_Surface *sur;
-	SDL_Texture *tex;
+    entity *hero; 
+    entity *enemy;
+    SDL_Surface *sur;
+    SDL_Texture *tex;
 };
 
-struct entity{
-	SDL_Rect entityPos;
-	SDL_Texture *entityTex;
-	SDL_Surface *entitySur;
-};
 
 
 display *createDisplay(int width, int height);

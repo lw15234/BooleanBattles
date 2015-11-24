@@ -10,6 +10,20 @@ struct button{
     SDL_Surface *buttonSur[2];
 };
 
+struct display{
+    int width, height;
+    SDL_Window *win;
+    SDL_Surface *sur;
+    SDL_Renderer *ren;
+    SDL_Event *e;
+};
+
+struct entity{
+    SDL_Rect entityPos;
+    SDL_Texture *entityTex;
+    SDL_Surface *entitySur;
+};
+
 int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos);
 
 
@@ -51,7 +65,7 @@ button *createButtons(int abilities, display *d)
         buttonArray[i].buttonPos.h = h;
         buttonArray[i].buttonPos.y = y;
         if(i == abilities){
-            buttonArray[i].buttonPos.x = x + (w + 50) * 4;
+            buttonArray[i].buttonPos.x = x + (w + 50) * 3;
             buttonArray[i].buttonSur[0] = SDL_LoadBMP("buttons/offAttack.bmp");
             buttonArray[i].buttonSur[1] = SDL_LoadBMP("buttons/onAttack.bmp");
             buttonArray[i].buttonTex[0] = 
