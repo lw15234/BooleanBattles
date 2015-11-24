@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 
-void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth);
+void implementDamage(int attack, enemy *enemy, int* playerHealth);
 int checkHealth(int enemyHealth, int playerHealth, battleState* pState);
 int loseBattle();
 int winBattle();
@@ -12,17 +12,17 @@ int subTestDamage(int attack, int* pTurns);
 
 
 /*Runs functions for the damage state in state machine*/
-int damageState(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth, battleState* pState)
+int damageState(int attack, enemy *enemy, int *playerHealth, battleState *pState)
 {
-    implementDamage(attack, pEnemy, enemyHealth, playerHealth);
-    return checkHealth(*enemyHealth, *playerHealth, pState);
+    implementDamage(attack, enemy, playerHealth);
+    return checkHealth(enemy->health, *playerHealth, pState);
 }
 
 /*Checks if an attack was successful and damages player or enemy accordingly*/
-void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth)
+void implementDamage(int attack, enemy *enemy, int* playerHealth)
 {
-    if(checkAttack(attack, pEnemy)){
-        (*enemyHealth)--;
+    if(checkAttack(attack, enemy)){
+        enemy->health--;
     }
     else{
         (*playerHealth)--;
@@ -101,11 +101,10 @@ int subTestDamage(int attack, int* pTurns)
     int *pPlayerHealth = &playerHealth, *pEnemyHealth = &enemyHealth;
     battleState currentState;
     battleState* pState = &currentState;
-    enemy *newEnemy = createEnemy(pState, pEnemyHealth);
+    enemy *newEnemy = createEnemy(pState);
     while(result == 0){
-        result = damageState(attack, newEnemy, pEnemyHealth, pPlayerHealth, pState);
+        result = damageState(attack, newEnemy, pPlayerHealth, pState);
         (*pTurns)++;
     }
-    free(newEnemy);
     return result;
 }

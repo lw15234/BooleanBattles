@@ -5,10 +5,9 @@ void runStateMachine(int *playerHealth, int abilities, display *d)
 {
     battleState currentState = START;
     battleState* pState = &currentState;
-    enemy *newEnemy;
+    enemy *newEnemy = NULL;
     currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
-    int attack = 0, enemyHealth, result = 0;
-    int *pEnemyHealth = &enemyHealth;
+    int attack = 0, result = 0;
     button *buttonArray = NULL;
 
 
@@ -25,7 +24,7 @@ void runStateMachine(int *playerHealth, int abilities, display *d)
                 attack = renderButtons(buttonArray, abilities, d, pState, battle);
                 break;
             case PLAYERACTION:
-                damageState(attack, newEnemy, pEnemyHealth, playerHealth, pState);
+                damageState(attack, newEnemy, playerHealth, pState);
                 break;
             case WIN:
                 result = 1;

@@ -7,8 +7,7 @@ void runStateMachine(int *playerHealth, int abilities, display *d)
     battleState* pState = &currentState;
     enemy *newEnemy = NULL;
     currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
-    int attack = 0, enemyHealth, result = 0;
-    int *pEnemyHealth = &enemyHealth;
+    int attack = 0, result = 0;
     button *buttonArray = NULL;
 
 
@@ -19,13 +18,13 @@ void runStateMachine(int *playerHealth, int abilities, display *d)
                 buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
                 SDL_RenderPresent(d->ren);
-                newEnemy = createEnemy(pState, pEnemyHealth);
+                newEnemy = createEnemy(pState);
                 break;
             case PLAYERINPUT:
                 attack = renderButtons(buttonArray, abilities, d, pState, battle);
                 break;
             case PLAYERACTION:
-                damageState(attack, newEnemy, pEnemyHealth, playerHealth, pState);
+                damageState(attack, newEnemy, playerHealth, pState);
                 break;
             case WIN:
                 result = 1;
