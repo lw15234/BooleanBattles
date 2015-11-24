@@ -83,7 +83,7 @@ int pressButton(SDL_Event* e, int choice, SDL_Rect buttonPos)
     return choice;
 }
 
-int renderButtons(button buttonArray[], int count, display *d, battleState *pState)
+int renderButtons(button buttonArray[], int count, display *d, battleState *pState, currentBattle *battle)
 {
     int i, run = 1, attack = 0;
     int choice[BUTTONS] = {0};
@@ -101,7 +101,7 @@ int renderButtons(button buttonArray[], int count, display *d, battleState *pSta
             }
         }
         //Renders the button the the user has selected
-        SDL_RenderClear(d->ren);
+        RenderRefresh(d, battle);
         for(i = 0; i < count; i++){
             SDL_RenderCopy(d->ren, buttonArray[i].buttonTex[choice[i]], NULL, 
                 &buttonArray[i].buttonPos);
@@ -134,19 +134,47 @@ void closeDisplay(display *d)
     return;
 }
 
+entity *createEntity(char *filename, int x, int y, int w, int h, display *d)
+{
+	entity *ent = (entity*)malloc(sizeof(entity));
+	ent->entityPos.x = x;
+	ent->entityPos.y = y;
+	ent->entityPos.w = w;
+	ent->entityPos.h = h;
+	ent->entitySur = SDL_LoadBMP(filename);
+	ent->entityTex = SDL_CreateTextureFromSurface(d->ren, ent->entitySur);
+	return ent;
+}
+/*Can use the level in this function to choose the background and the enemy*/
+void createBattle(display *d, currentBattle *battle)
+{
+	
+	battle->sur = SDL_LoadBMP("background.bmp");
+	battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
+	
+	battle->hero = createEntity("hero.bmp", 100, 100, 100, 100, d);
+	battle->enemy = createEntity("hero.bmp", 500, 100, 100, 100, d);
+}
 
-
+void RenderRefresh(display *d, currentBattle *battle)
+{
+	SDL_RenderClear(d->ren);
+	SDL_RenderCopy(d->ren, battle->tex, NULL, NULL);
+	SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
+	SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
+}
 
 
 void testDisplay()
 {
+    currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
     display *d = createDisplay(1080, 720);
 
     button buttonArray[BUTTONS];
     battleState state = PLAYERINPUT;
 
     createButtons(buttonArray, 4, d);
-    renderButtons(buttonArray, 4, d, &state);
+    renderButtons(buttonArray, 4, d, &state, battle);
 
     closeDisplay(d);
 
