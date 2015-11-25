@@ -62,7 +62,7 @@ button *createButtons(int abilities, display *d)
     int w = 100, h = 100, x = 250, y = 550, i;
     FILE* buttonFiles;
     char offFile[30], onFile[30];
-    button *buttonArray = malloc((abilities + 1) * sizeof(button));
+    button *buttonArray = (button *)malloc((abilities + 1) * sizeof(button));
 
     
     // Sets the positions of the buttons 
@@ -151,7 +151,7 @@ int renderButtons(button buttonArray[], int abilities, display *d, battleState *
 }
 
 /*Free memory used by buttons*/
-void freeButtons(button *buttonArray, int buttons)
+void freeBattle(button *buttonArray, int buttons, currentBattle *battle)
 {
     int i, j;    
     for(i = 0; i < buttons; i++){
@@ -160,6 +160,13 @@ void freeButtons(button *buttonArray, int buttons)
             SDL_FreeSurface(buttonArray[i].buttonSur[j]);
         }
     }
+    SDL_DestroyTexture(battle->hero->tex);
+    SDL_DestroyTexture(battle->enemy->tex);
+    SDL_DestroyTexture(battle->tex);
+    SDL_FreeSurface(battle->hero->sur);
+    SDL_FreeSurface(battle->enemy->sur);
+    SDL_FreeSurface(battle->sur);
+    
     free(buttonArray);
 }
 
@@ -192,8 +199,8 @@ currentBattle *createBattle(display *d)
     battle->sur = SDL_LoadBMP("background.bmp");
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
 
-    battle->hero = createEntity("hero.bmp", 100, 100, 100, 100, d);
-    battle->enemy = createEntity("hero.bmp", 500, 100, 100, 100, d);
+    battle->hero = createEntity("hero.bmp", 100, 500, 100, 100, d);
+    battle->enemy = createEntity("hero.bmp", 800, 500, 100, 100, d);
 
     return battle;
 }

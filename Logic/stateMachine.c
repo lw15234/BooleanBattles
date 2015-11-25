@@ -40,7 +40,7 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
         }
     }
 
-    freeButtons(buttonArray, abilities + 1);
+    freeBattle(buttonArray, abilities + 1, battle);
     free(battle);
     free(newEnemy);
     return result;
