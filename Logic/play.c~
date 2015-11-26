@@ -14,7 +14,7 @@ typedef enum gameState{
 
 int main(void)
 {
-    int playerHealth = 3, currentLevel = 0, game = 1, result;
+    int playerHealth = 3, currentLevel = -1, game = 1, result;
     gameState currentState = GAMESTART;
     display *d = NULL;
 
