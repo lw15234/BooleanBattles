@@ -1,0 +1,6 @@
+buttons/offFire.bmp
+buttons/onFire.bmp
+buttons/offIce.bmp
+buttons/onIce.bmp
+buttons/offLightning.bmp
+buttons/onLightning.bmp

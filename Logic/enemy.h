@@ -1,16 +1,19 @@
-/*Retrieves or generates information about our enemy*/
+/*Generates information about our enemy/level*/
 
 #include "base.h"
 
+/*The total number of possible attacks*/
 #define ATTACKCOMBOS 8
-#define FILLER -99
+/*Number of levels*/
+#define LEVELS 10
 
+/*Contains information for our enemy/level*/
 typedef struct enemy{
+    int abilities;
+    int health;
+    char equation[30];
     int weakness[ATTACKCOMBOS];
-    int solutions;
-    char* equation;
 }enemy;
 
-struct enemy createEnemy(battleState* pState, int* pEnemyHealth);
-void fillWeaknessArray(enemy* pEnemy, int weaknesses[]);
-void fillWeaknessFiller(enemy* pEnemy);
+/*Create an enemy structure*/
+struct enemy *createEnemy(int level);

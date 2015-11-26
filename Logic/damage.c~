@@ -1,16 +1,28 @@
+/*Implements damage and checks if the battle is over*/
+
 #include "damage.h"
 #include <stdio.h>
 
-int damageState(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth, battleState* pState)
+
+void implementDamage(int attack, enemy *enemy, int* playerHealth);
+int checkHealth(int enemyHealth, int playerHealth, battleState* pState);
+int loseBattle();
+int winBattle();
+int subTestDamage(int attack, int* pTurns);
+
+
+/*Runs functions for the damage state in state machine*/
+int damageState(int attack, enemy *enemy, int *playerHealth, battleState *pState)
 {
-    implementDamage(attack, pEnemy, enemyHealth, playerHealth);
-    return checkHealth(*enemyHealth, *playerHealth, pState);
+    implementDamage(attack, enemy, playerHealth);
+    return checkHealth(enemy->health, *playerHealth, pState);
 }
 
-void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHealth)
+/*Checks if an attack was successful and damages player or enemy accordingly*/
+void implementDamage(int attack, enemy *enemy, int* playerHealth)
 {
-    if(checkAttack(attack, pEnemy)){
-        (*enemyHealth)--;
+    if(checkAttack(attack, enemy)){
+        enemy->health--;
     }
     else{
         (*playerHealth)--;
@@ -18,6 +30,7 @@ void implementDamage(int attack, enemy* pEnemy, int* enemyHealth, int* playerHea
     return;
 }
 
+/*Checks if the player and enemy are still alive*/
 int checkHealth(int enemyHealth, int playerHealth, battleState* pState)
 {
     if(playerHealth <= 0){
@@ -32,18 +45,21 @@ int checkHealth(int enemyHealth, int playerHealth, battleState* pState)
     return 0;
 }
 
+/*The player has lost the battle*/
 int loseBattle()
 {
     printf("You lose. Sorry :(\n");
     return -1;
 }
 
+/*The player has won the battle*/
 int winBattle()
 {
     printf("You win! Congratz!\n");
     return 1;
 }
 
+/*Test the damage module*/
 void testDamage()
 {
     int i, j, k, l = 0, turns = 0;
@@ -53,7 +69,7 @@ void testDamage()
         for(j = 0; j <= 1; j++){
             for(k = 0; k <= 1; k++){
                 turns = 0;
-                results[l][0] = subTestDamage(i + j * 10 + k * 100, pTurns);
+                results[l][0] = subTestDamage(i * 100 + j * 10 + k, pTurns);
                 results[l][1] = turns;
                 l++;
             }
@@ -78,16 +94,14 @@ void testDamage()
 
 }
 
+/*Part of the test function*/
 int subTestDamage(int attack, int* pTurns)
 {
-    int playerHealth = 3, enemyHealth = 3, result = 0;
-    int *pPlayerHealth = &playerHealth, *pEnemyHealth = &enemyHealth;
-    battleState currentState;
-    battleState* pState = &currentState;
-    enemy newEnemy = createEnemy(pState, pEnemyHealth);
-    enemy* pEnemy = &newEnemy;
+    int playerHealth = 3, result = 0;
+    int *pPlayerHealth = &playerHealth;
+    enemy *newEnemy = createEnemy(8);
     while(result == 0){
-        result = damageState(attack, pEnemy, pEnemyHealth, pPlayerHealth, pState);
+        result = damageState(attack, newEnemy, pPlayerHealth, pState);
         (*pTurns)++;
     }
     return result;

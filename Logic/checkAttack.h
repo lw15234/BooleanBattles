@@ -1,6 +1,5 @@
-/*Checks to see if an integer is in the enemy's weakness array*/
+/*Checks if enemy is weak to an attack*/
 
 #include "enemy.h"
 
 int checkAttack(int attack, enemy* pEnemy);
-

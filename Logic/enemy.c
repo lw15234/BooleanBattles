@@ -1,76 +1,92 @@
+/*Generates information about our enemy/level*/
+
 #include "enemy.h"
 #include <string.h>
+#include <stdlib.h>
 
-struct enemy createEnemy(battleState* pState, int* pEnemyHealth)
+/*Something to fill space in our weakness array. Not an actual attack.*/
+#define FILLER -99
+
+
+void fillWeaknessArray(enemy* newEnemy, int weaknesses[]);
+/*void fillWeaknessFiller(enemy* newEnemy);*/
+
+
+/*Create an enemy structure*/
+struct enemy *createEnemy(int level)
 {
-    enemy newEnemy;
-    enemy* pEnemy;
-    pEnemy = &newEnemy;
-    int tmp[] = {101, 110, 111};
-    newEnemy.solutions = sizeof(tmp) / sizeof(tmp[0]);
-    newEnemy.equation = "(F || W) && G";
-    fillWeaknessArray(pEnemy, tmp);
-    fillWeaknessFiller(pEnemy);
-    *pEnemyHealth = newEnemy.solutions;
-    *pState = PLAYERINPUT;
+    enemy enemyArray[LEVELS] = {
+        {1, 1, "F",                     {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {1, 1, "!F",                    {  0,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {1, 1, "!!F",                   {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {2, 1, "F && I",                { 11,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {2, 3, "F || I",                {  1,  10,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {2, 3, "F || !I",               {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {2, 3, "!(F && I)",             {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {3, 1, "F && I && L",           {111,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {3, 3, "(F || I) && L",         {101, 110, 111,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
+        {3, 4, "(F && I) || (!I && L)", { 11, 100, 101, 111,                                FILLER, FILLER, FILLER, FILLER} },
+    };
+
+    enemy *newEnemy = malloc(sizeof(enemy));
+    newEnemy->abilities = enemyArray[level].abilities;
+    newEnemy->health = enemyArray[level].health;
+    strcpy(newEnemy->equation, enemyArray[level].equation);
+    fillWeaknessArray(newEnemy, enemyArray[level].weakness);
     return newEnemy;
 }
 
-void fillWeaknessArray(enemy* pEnemy, int weaknesses[])
+/*Fill an enemy's weakness array*/
+void fillWeaknessArray(enemy* newEnemy, int weaknesses[])
 {
     int i;
-    for(i = 0; i < (*pEnemy).solutions; i++){
-        (*pEnemy).weakness[i] = weaknesses[i];
+    for(i = 0; i < ATTACKCOMBOS; i++){
+        newEnemy->weakness[i] = weaknesses[i];
     }
     return;
 }
 
-void fillWeaknessFiller(enemy* pEnemy)
+/*Fill any space in the weakness array with filler. No longer needed.*/
+/*
+void fillWeaknessFiller(enemy* newEnemy)
 {
     int i;
-    for(i = (*pEnemy).solutions; i < ATTACKCOMBOS; i++){
-        (*pEnemy).weakness[i] = FILLER;
+    for(i = newEnemy->health; i < ATTACKCOMBOS; i++){
+        newEnemy->weakness[i] = FILLER;
     }
     return;
-}
+}*/
 
+/*Test the enemy module*/
 void testEnemy()
 {
     int i;
-    enemy newEnemy;
-    battleState currentState;
-    battleState* pState = &currentState;
-    int enemyHealth;
-    int* pEnemyHealth = &enemyHealth;
-    newEnemy = createEnemy(pState, pEnemyHealth);
-    if(newEnemy.weakness[0] != 101){
+    enemy *newEnemy = createEnemy(8);
+
+    if(newEnemy->weakness[0] != 101){
         fail("Weakness 0 set incorrectly");
     }
-    if(newEnemy.weakness[1] != 110){
+    if(newEnemy->weakness[1] != 110){
         fail("Weakness 1 set incorrectly");
     }
-    if(newEnemy.weakness[2] != 111){
+    if(newEnemy->weakness[2] != 111){
         fail("Weakness 2 set incorrectly");
     }
-    if(newEnemy.solutions != 3){
-        fail("Solutions set incorrectly");
+    if(newEnemy->health != 3){
+        fail("Health set incorrectly");
     }
-    if(strcmp(newEnemy.equation, "(F || W) && G") != 0){
+    if(strcmp(newEnemy->equation, "(F || I) && L") != 0){
         fail("Equation set incorrectly");
     }
-    for(i = newEnemy.solutions; i < ATTACKCOMBOS; i++){
-        if(newEnemy.weakness[i] != FILLER){
+    if(newEnemy->abilities != 3){
+        fail("Abilities set incorrectly");
+    }
+    for(i = newEnemy->health; i < ATTACKCOMBOS; i++){
+        if(newEnemy->weakness[i] != FILLER){
             fail("Filler weakness not set");
         }
     }
-    if(*pEnemyHealth != 3){
-        fail("Enemy health not set");
-    }
-
-    if(*pState != PLAYERINPUT){
-        fail("State not set");
-    }
-
+    free(newEnemy);
     succeed("Enemy module ok");
 }
 

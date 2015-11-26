@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="new" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/new" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add option="-lmingw32" />
+					<Add option="-lSDL2Main" />
+					<Add option="-lopengl32" />
+					<Add option="-lSDL2" />
+					<Add option="-lSDL2_image" />
+					<Add option="-lgdi32" />
+					<Add directory="SDL2/lib" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/new" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="SDL2/include/SDL.h" />
+		<Unit filename="SDL2/include/SDL_assert.h" />
+		<Unit filename="SDL2/include/SDL_atomic.h" />
+		<Unit filename="SDL2/include/SDL_audio.h" />
+		<Unit filename="SDL2/include/SDL_bits.h" />
+		<Unit filename="SDL2/include/SDL_blendmode.h" />
+		<Unit filename="SDL2/include/SDL_clipboard.h" />
+		<Unit filename="SDL2/include/SDL_config.h" />
+		<Unit filename="SDL2/include/SDL_cpuinfo.h" />
+		<Unit filename="SDL2/include/SDL_endian.h" />
+		<Unit filename="SDL2/include/SDL_error.h" />
+		<Unit filename="SDL2/include/SDL_events.h" />
+		<Unit filename="SDL2/include/SDL_filesystem.h" />
+		<Unit filename="SDL2/include/SDL_gamecontroller.h" />
+		<Unit filename="SDL2/include/SDL_gesture.h" />
+		<Unit filename="SDL2/include/SDL_haptic.h" />
+		<Unit filename="SDL2/include/SDL_hints.h" />
+		<Unit filename="SDL2/include/SDL_image.h" />
+		<Unit filename="SDL2/include/SDL_joystick.h" />
+		<Unit filename="SDL2/include/SDL_keyboard.h" />
+		<Unit filename="SDL2/include/SDL_keycode.h" />
+		<Unit filename="SDL2/include/SDL_loadso.h" />
+		<Unit filename="SDL2/include/SDL_log.h" />
+		<Unit filename="SDL2/include/SDL_main.h" />
+		<Unit filename="SDL2/include/SDL_messagebox.h" />
+		<Unit filename="SDL2/include/SDL_mouse.h" />
+		<Unit filename="SDL2/include/SDL_mutex.h" />
+		<Unit filename="SDL2/include/SDL_name.h" />
+		<Unit filename="SDL2/include/SDL_opengl.h" />
+		<Unit filename="SDL2/include/SDL_opengles.h" />
+		<Unit filename="SDL2/include/SDL_opengles2.h" />
+		<Unit filename="SDL2/include/SDL_pixels.h" />
+		<Unit filename="SDL2/include/SDL_platform.h" />
+		<Unit filename="SDL2/include/SDL_power.h" />
+		<Unit filename="SDL2/include/SDL_quit.h" />
+		<Unit filename="SDL2/include/SDL_rect.h" />
+		<Unit filename="SDL2/include/SDL_render.h" />
+		<Unit filename="SDL2/include/SDL_revision.h" />
+		<Unit filename="SDL2/include/SDL_rwops.h" />
+		<Unit filename="SDL2/include/SDL_scancode.h" />
+		<Unit filename="SDL2/include/SDL_shape.h" />
+		<Unit filename="SDL2/include/SDL_stdinc.h" />
+		<Unit filename="SDL2/include/SDL_surface.h" />
+		<Unit filename="SDL2/include/SDL_system.h" />
+		<Unit filename="SDL2/include/SDL_syswm.h" />
+		<Unit filename="SDL2/include/SDL_test.h" />
+		<Unit filename="SDL2/include/SDL_test_assert.h" />
+		<Unit filename="SDL2/include/SDL_test_common.h" />
+		<Unit filename="SDL2/include/SDL_test_compare.h" />
+		<Unit filename="SDL2/include/SDL_test_crc32.h" />
+		<Unit filename="SDL2/include/SDL_test_font.h" />
+		<Unit filename="SDL2/include/SDL_test_fuzzer.h" />
+		<Unit filename="SDL2/include/SDL_test_harness.h" />
+		<Unit filename="SDL2/include/SDL_test_images.h" />
+		<Unit filename="SDL2/include/SDL_test_log.h" />
+		<Unit filename="SDL2/include/SDL_test_md5.h" />
+		<Unit filename="SDL2/include/SDL_test_random.h" />
+		<Unit filename="SDL2/include/SDL_thread.h" />
+		<Unit filename="SDL2/include/SDL_timer.h" />
+		<Unit filename="SDL2/include/SDL_touch.h" />
+		<Unit filename="SDL2/include/SDL_types.h" />
+		<Unit filename="SDL2/include/SDL_version.h" />
+		<Unit filename="SDL2/include/SDL_video.h" />
+		<Unit filename="SDL2/include/begin_code.h" />
+		<Unit filename="SDL2/include/close_code.h" />
+		<Unit filename="hero.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="hero.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="region.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="region.h" />
+		<Unit filename="util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="util.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

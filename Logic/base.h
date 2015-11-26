@@ -1,10 +1,14 @@
-// Reports a test success
+/*Contains basic test functions and forward declarations to use throughout
+the rest of the game*/
+
+/*Print a success message*/
 void succeed(char *message);
 
-// Report a test failure or bug, and stop the program.
+/*Print an error message and exit*/
 void fail(char *message);
 
-
+/*Forward reference so other modules can change state of game
+    (used mainly in stateMachine)*/
 typedef enum battleState{
     START,
     PLAYERINPUT,
@@ -12,4 +16,3 @@ typedef enum battleState{
     WIN,
     LOSE
 } battleState;
-
