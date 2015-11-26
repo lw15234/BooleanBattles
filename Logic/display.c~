@@ -160,11 +160,11 @@ void freeBattle(button *buttonArray, int buttons, currentBattle *battle)
             SDL_FreeSurface(buttonArray[i].buttonSur[j]);
         }
     }
-    SDL_DestroyTexture(battle->hero->tex);
-    SDL_DestroyTexture(battle->enemy->tex);
+    SDL_DestroyTexture(battle->hero->entityTex);
+    SDL_DestroyTexture(battle->enemy->entityTex);
     SDL_DestroyTexture(battle->tex);
-    SDL_FreeSurface(battle->hero->sur);
-    SDL_FreeSurface(battle->enemy->sur);
+    SDL_FreeSurface(battle->hero->entitySur);
+    SDL_FreeSurface(battle->enemy->entitySur);
     SDL_FreeSurface(battle->sur);
     
     free(buttonArray);
@@ -200,7 +200,7 @@ currentBattle *createBattle(display *d)
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
 
     battle->hero = createEntity("hero.bmp", 100, 500, 100, 100, d);
-    battle->enemy = createEntity("hero.bmp", 800, 500, 100, 100, d);
+    battle->enemy = createEntity("hero.bmp", 800, 200, 100, 100, d);
 
     return battle;
 }
