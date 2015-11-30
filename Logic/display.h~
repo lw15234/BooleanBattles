@@ -9,7 +9,7 @@ typedef struct entity entity;
 display *createDisplay(int width, int height);
 button *createButtons(int abilities, display *d);
 int renderButtons(button *buttonArray, int abilities, display *d, battleState *pState, currentBattle *battle);
-void freeButtons(button *buttonArray, int buttons);
+void freeBattle(button *buttonArray, int buttons, currentBattle *battle);
 void closeDisplay(display *d);
 entity *createEntity(char *filename, int x, int y, int w, int h, display *d);
 currentBattle *createBattle(display *d);

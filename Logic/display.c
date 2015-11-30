@@ -188,21 +188,20 @@ entity *createEntity(char *filename, int x, int y, int w, int h, display *d)
     ent->entityPos.w = w;
     ent->entityPos.h = h;
     ent->entitySur = SDL_LoadBMP(filename);
+	SDL_SetColorKey( ent->entitySur, SDL_TRUE, SDL_MapRGB(ent->entitySur->format, 228, 129, 250 ));
     ent->entityTex = SDL_CreateTextureFromSurface(d->ren, ent->entitySur);
-    SDL_SetColorKey( ent->entitySur, SDL_TRUE, SDL_MapRGB(ent->entitySur->format, 228, 129, 250 ));
     return ent;
 }
 
 /*Can use the level in this function to choose the background and the enemy*/
-currentBattle *createBattle(display *d)
+currentBattle *createBattle(display *d, enemy *e)
 {
     currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
 
-    battle->sur = SDL_LoadBMP("background.bmp");
+    battle->sur = SDL_LoadBMP(e->background);
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
-
     battle->hero = createEntity("hero.bmp", 100, 500, 100, 100, d);
-    battle->enemy = createEntity("./enemies/uglygreentroll.bmp", 800, 200, 350, 500, d);
+    battle->enemy = createEntity(e->enemySprite, 700, 200, 350, 500, d);
 
     return battle;
 }

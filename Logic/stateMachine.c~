@@ -15,8 +15,8 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
     while(result == 0){
         switch(currentState){
             case START:
-                battle = createBattle(d);
                 newEnemy = createEnemy(currentLevel);
+		battle = createBattle(d, newEnemy);
                 printf("Current health: %d\n", *playerHealth);
                 printf("%s\n", newEnemy->equation);
                 abilities = newEnemy->abilities;
@@ -27,6 +27,7 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 break;
             case PLAYERINPUT:
                 attack = renderButtons(buttonArray, abilities, d, pState, battle);
+		//This allows the user to close the game
 		if(attack == -1){
 			result = -2;
 		}

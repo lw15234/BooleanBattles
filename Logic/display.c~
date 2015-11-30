@@ -127,7 +127,7 @@ int renderButtons(button buttonArray[], int abilities, display *d, battleState *
         if (SDL_PollEvent(&event)){
             if(event.type == SDL_QUIT){
                 run = 0;
-				attack = -1;
+				return -1;
             }
             for(i = 0; i < abilities + 1; i++){
                 choice[i] = pressButton(&event, choice[i], buttonArray[i].buttonPos);
@@ -194,19 +194,14 @@ entity *createEntity(char *filename, int x, int y, int w, int h, display *d)
 }
 
 /*Can use the level in this function to choose the background and the enemy*/
-currentBattle *createBattle(display *d)
+currentBattle *createBattle(display *d, enemy *e)
 {
     currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
 
-    battle->sur = SDL_LoadBMP("background.bmp");
+    battle->sur = SDL_LoadBMP(e->background);
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
-
     battle->hero = createEntity("hero.bmp", 100, 500, 100, 100, d);
-<<<<<<< HEAD
-    battle->enemy = createEntity("hero.bmp", 800, 200, 100, 100, d);
-=======
-    battle->enemy = createEntity("./enemies/uglygreentroll.bmp", 800, 200, 350, 500, d);
->>>>>>> 1292429659099270d060004b5ff59b318418e00b
+    battle->enemy = createEntity(e->enemySprite, 700, 200, 350, 500, d);
 
     return battle;
 }

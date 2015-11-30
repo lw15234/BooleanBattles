@@ -16,22 +16,24 @@ void fillWeaknessArray(enemy* newEnemy, int weaknesses[]);
 struct enemy *createEnemy(int level)
 {
     enemy enemyArray[LEVELS] = {
-        {1, 1, "F",                     {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {1, 1, "!F",                    {  0,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {1, 1, "!!F",                   {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {2, 1, "F && I",                { 11,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {2, 3, "F || I",                {  1,  10,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {2, 3, "F || !I",               {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {2, 3, "!(F && I)",             {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {3, 1, "F && I && L",           {111,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {3, 3, "(F || I) && L",         {101, 110, 111,                             FILLER, FILLER, FILLER, FILLER, FILLER} },
-        {3, 4, "(F && I) || (!I && L)", { 11, 100, 101, 111,                                FILLER, FILLER, FILLER, FILLER} },
+        {1, 1, "F",                     {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/uglygreentroll.bmp", "background.bmp" },
+        {1, 1, "!F",                    {  0,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/faun.bmp", "background.bmp" },
+        {1, 1, "!!F",                   {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/goblin.bmp", "background.bmp" },
+        {2, 1, "F && I",                { 11,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/fox.bmp", "background.bmp" },
+        {2, 3, "F || I",                {  1,  10,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/werewolf.bmp", "background.bmp" },
+        {2, 3, "F || !I",               {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/vampire.bmp", "background.bmp" },
+        {2, 3, "!(F && I)",             {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/ninja.bmp", "background.bmp" },
+        {3, 1, "F && I && L",           {111,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/alien.bmp", "background.bmp" },
+        {3, 3, "(F || I) && L",         {101, 110, 111,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/oneeyedmonster.bmp", "background.bmp" },
+        {3, 4, "(F && I) || (!I && L)", { 11, 100, 101, 111,                                FILLER, FILLER, FILLER, FILLER} , "enemies/weirdguy.bmp", "background.bmp" },
     };
 
     enemy *newEnemy = malloc(sizeof(enemy));
     newEnemy->abilities = enemyArray[level].abilities;
     newEnemy->health = enemyArray[level].health;
     strcpy(newEnemy->equation, enemyArray[level].equation);
+	strcpy(newEnemy->enemySprite, enemyArray[level].enemySprite);
+	strcpy(newEnemy->background, enemyArray[level].background);
     fillWeaknessArray(newEnemy, enemyArray[level].weakness);
     return newEnemy;
 }
@@ -61,7 +63,7 @@ void fillWeaknessFiller(enemy* newEnemy)
 void testEnemy()
 {
     int i;
-    enemy *newEnemy = createEnemy(pState, 8);
+    enemy *newEnemy = createEnemy(8);
 
     if(newEnemy->weakness[0] != 101){
         fail("Weakness 0 set incorrectly");
