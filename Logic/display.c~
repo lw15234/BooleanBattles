@@ -202,7 +202,11 @@ currentBattle *createBattle(display *d)
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
 
     battle->hero = createEntity("hero.bmp", 100, 500, 100, 100, d);
+<<<<<<< HEAD
+    battle->enemy = createEntity("hero.bmp", 800, 200, 100, 100, d);
+=======
     battle->enemy = createEntity("./enemies/uglygreentroll.bmp", 800, 200, 350, 500, d);
+>>>>>>> 1292429659099270d060004b5ff59b318418e00b
 
     return battle;
 }
