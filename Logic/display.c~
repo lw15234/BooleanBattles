@@ -127,6 +127,7 @@ int renderButtons(button buttonArray[], int abilities, display *d, battleState *
         if (SDL_PollEvent(&event)){
             if(event.type == SDL_QUIT){
                 run = 0;
+				attack = -1;
             }
             for(i = 0; i < abilities + 1; i++){
                 choice[i] = pressButton(&event, choice[i], buttonArray[i].buttonPos);
@@ -135,7 +136,7 @@ int renderButtons(button buttonArray[], int abilities, display *d, battleState *
                 run = 0;
             }
         }
-        //Renders the button the the user has selected
+        //Renders the button the user has selected
         RenderRefresh(d, battle);
         for(i = 0; i < abilities + 1; i++){
             SDL_RenderCopy(d->ren, buttonArray[i].buttonTex[choice[i]], NULL, 
