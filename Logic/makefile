@@ -16,6 +16,8 @@ DISPLAY = $(DAMAGE) display.c
 STATEMACHINE = $(DISPLAY) stateMachine.c
 PLAY = $(STATEMACHINE) play.c
 
+ATTACKANIMATION = attackAnimation.c
+
 
 # Make the whole program by default
 default: play
@@ -39,6 +41,8 @@ stateMachine:
 	$(CC) $(STATEMACHINE) $(TESTRUN) -DRUN=runStateMachine -o $(TARGET) $(CFLAGS) $(LIBS)
 play:
 	$(CC) $(PLAY) -o $(TARGET) $(CFLAGS) $(LIBS)
+attackAnimation:
+	$(CC) $(ATTACKANIMATION) -o attackAnimation $(CFLAGS) $(LIBS)
 
 
 clean:
