@@ -27,6 +27,9 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 break;
             case PLAYERINPUT:
                 attack = renderButtons(buttonArray, abilities, d, pState, battle);
+		if(attack == -1){
+			result = -2;
+		}
                 break;
             case PLAYERACTION:
                 damageState(attack, newEnemy, playerHealth, pState);
