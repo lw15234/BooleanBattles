@@ -200,8 +200,8 @@ currentBattle *createBattle(display *d, enemy *e)
 
     battle->sur = SDL_LoadBMP(e->background);
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
-    battle->hero = createEntity("hero.bmp", 100, 500, 100, 100, d);
-    battle->enemy = createEntity(e->enemySprite, 700, 200, 350, 500, d);
+    battle->hero = createEntity("hero.bmp", 50, 350, 200, 300, d);
+    battle->enemy = createEntity(e->enemySprite, 750, 150, 350, 500, d);
 
     return battle;
 }
