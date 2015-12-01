@@ -252,7 +252,7 @@ bool simplyUploadALocationAccessIndicator (  ) {
 //int locationPosition_x [ LOCATION_ON_MAP_NUM_MAX ], locationPosition_y [ LOCATION_ON_MAP_NUM_MAX ];
 //int locationCurrent = 0, locationMax = 2;
 
-	if ( locationAccess [ locationCurrent ] == 1 ) {
+	if ( locationAccess [ locationCurrent ] == 1 ) { //is the location unlocked?
 		locationImageName = (char *) "2.1greenUnclicked.png";
 	} else {
 		locationImageName = (char *) "1.1redUnclicked.png";
@@ -808,7 +808,7 @@ void fillLocationCoordination() {
 
 void fillLocationAccessibility() {
 	locationAccess[ Gydanhil ] = 1; //location 0
-	locationAccess[ FroastoakVale ] = 1; //location 1
+	locationAccess[ FroastoakVale ] = 0; //location 1
 	locationAccess[ NessusRoad ] = 0; //location 2
 
 }
@@ -952,8 +952,9 @@ int main( int argc, char* args[] ) {
 							dx = 0;
 							targetLocationReached = true;
 							marchingTowardsTargetLocation = false;
-							sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+							locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
 							printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+							
 							break;
 						}
 					} //
