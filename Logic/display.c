@@ -202,6 +202,7 @@ currentBattle *createBattle(display *d, enemy *e)
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
     battle->hero = createEntity("buttons/offAttack.bmp", 50, 350, 200, 300, d);
     battle->enemy = createEntity(e->enemySprite, 750, 150, 350, 500, d);
+   
 
     return battle;
 }
