@@ -16,7 +16,6 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
         switch(currentState){
             case START:
                 newEnemy = createEnemy(currentLevel);
-		printf("here?\n");
 		battle = createBattle(d, newEnemy);
                 printf("Current health: %d\n", *playerHealth);
                 printf("%s\n", newEnemy->equation);

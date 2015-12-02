@@ -14,7 +14,7 @@ typedef struct enemy{
     char equation[30];
     int weakness[ATTACKCOMBOS];
     char enemySprite[30];
-    char background[30];
+    char background[40];
     char question[30];
     char dialogue[30];
 }enemy;
