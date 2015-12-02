@@ -1,3 +1,4 @@
+#include "attackAnimation.h"
 #include "SDL.h"
 #include <math.h>
 
@@ -20,15 +21,12 @@ typedef struct display{
 
 projectile *createProjectile();
 void destroyProjectile(projectile *p);
-void attackManager(int attack, display *d);
-void renderAttack(int attack, projectile *p, display *d);
+void renderAttack(int attack, projectile *p, SDL_Renderer *ren);
 void selectAttack(int attack, projectile *p);
-void setAttackAttr(projectile *p, display *d);
+void setAttackAttr(projectile *p, SDL_Renderer *ren);
 void fillClips(projectile *p);
-void animateAttack(projectile *p, display *d, int width, int height);
+void animateAttack(projectile *p, SDL_Renderer *ren, int width, int height);
 
-display *createDisplay(int width, int height);
-void closeDisplay(display *d);
 
 projectile *createProjectile(){
     projectile *p = (projectile *)malloc(sizeof(projectile));
@@ -48,7 +46,7 @@ void destroyProjectile(projectile *p){
     return;
 }
 
-void attackManager(int attack, display *d)
+void attackManager(int attack, SDL_Renderer *ren)
 {
     int i;
 
@@ -56,24 +54,24 @@ void attackManager(int attack, display *d)
     fillClips(p);
 
     if(attack == 0){
-        renderAttack(3, p, d);
+        renderAttack(3, p, ren);
     }
     else{
         for(i = 0; i < 3; i++){
             if((attack / (int)pow(10, i)) % 10){
-                renderAttack(i, p, d);
+                renderAttack(i, p, ren);
             }
         }
     }
     destroyProjectile(p);
 }
 
-void renderAttack(int attack, projectile *p, display *d)
+void renderAttack(int attack, projectile *p, SDL_Renderer *ren)
 {
     int height = 250, width = 250;
     selectAttack(attack, p);
-    setAttackAttr(p, d);
-    animateAttack(p, d, width, height);
+    setAttackAttr(p, ren);
+    animateAttack(p, ren, width, height);
 }
 
 void selectAttack(int attack, projectile *p)
@@ -94,10 +92,10 @@ void selectAttack(int attack, projectile *p)
     }
 }
 
-void setAttackAttr(projectile *p, display *d)
+void setAttackAttr(projectile *p, SDL_Renderer *ren)
 {
-    p->nextTex = SDL_CreateTextureFromSurface(d->ren, p->sur);
-    SDL_SetRenderDrawColor(d->ren, 255, 255, 255, 0);
+    p->nextTex = SDL_CreateTextureFromSurface(ren, p->sur);
+    SDL_SetRenderDrawColor(ren, 255, 255, 255, 0);
     p->tex = p->nextTex;
 }
 
@@ -112,11 +110,10 @@ void fillClips(projectile *p)
     }
 }
 
-void animateAttack(projectile *p, display *d, int width, int height)
+void animateAttack(projectile *p, SDL_Renderer *ren, int width, int height)
 {
     int i;
-    clip = (SDL_Rect *)malloc(sizeof(SDL_Rect));
-    SDL_Rect *clip = NULL;
+    SDL_Rect *clip = (SDL_Rect *)malloc(sizeof(SDL_Rect));
     SDL_Rect renderQuad = {0, 0, width, height};
     Uint32 t;
 
@@ -125,47 +122,10 @@ void animateAttack(projectile *p, display *d, int width, int height)
         renderQuad.x = i * 10;
         renderQuad.w = clip->w;
         renderQuad.h = clip->h;
-        SDL_RenderCopy(d->ren, p->tex, clip, &renderQuad);
-        SDL_RenderPresent(d->ren);
+        SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
+        SDL_RenderPresent(ren);
         t = SDL_GetTicks();
         SDL_Delay(20 - (t % 20));
     }
     free(clip);
-}
-
-display *createDisplay(int width, int height)
-{
-    if(SDL_Init(SDL_INIT_VIDEO) < 0){
-        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-        exit(1);
-    }
-    display *d = (display *)malloc(sizeof(display));
-    d->width = width;
-    d->height = height;
-    d->win = NULL;
-    d->ren = NULL;
-    d->win = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, d->width, d->height, 0);
-    if(d->win == NULL){
-        fprintf(stderr, "Window could not be created! SDL_Error: %s.\n", SDL_GetError());
-        exit(1);
-    }
-    d->ren = SDL_CreateRenderer(d->win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    SDL_RenderPresent(d->ren);
-    return d;
-}
-
-void closeDisplay(display *d)
-{
-    SDL_DestroyWindow(d->win);
-    SDL_Quit();
-    free(d);
-    return;
-}
-
-int main(void)
-{
-    display *d = createDisplay(1080, 720);
-    attackManager(1, d);
-    closeDisplay(d);
-    return 0;
 }

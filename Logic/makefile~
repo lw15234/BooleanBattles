@@ -12,11 +12,11 @@ BASE = base.c
 ENEMY = $(BASE) enemy.c
 CHECKATTACK = $(ENEMY) checkAttack.c
 DAMAGE = $(CHECKATTACK) damage.c
-DISPLAY = $(DAMAGE) display.c
+ATTACKANIMATION = $(DAMAGE) attackAnimation.c
+DISPLAY = $(ATTACKANIMATION) display.c
 STATEMACHINE = $(DISPLAY) stateMachine.c
 PLAY = $(STATEMACHINE) play.c
 
-ATTACKANIMATION = attackAnimation.c
 
 
 # Make the whole program by default
@@ -35,14 +35,14 @@ checkAttack:
 damage:
 	$(CC) $(DAMAGE) $(TESTRUN) -DRUN=testDamage -o $(TARGET) $(CFLAGS) $(LIBS)
 	./booleanBattles
+attackAnimation:
+	$(CC) $(ATTACKANIMATION) $(TESTRUN) -DRUN=testAttackAnimation -o $(TARGET) $(CFLAGS) $(LIBS)
 display:
 	$(CC) $(DISPLAY) $(TESTRUN) -DRUN=testDisplay -o $(TARGET) $(CFLAGS) $(LIBS)
 stateMachine:
 	$(CC) $(STATEMACHINE) $(TESTRUN) -DRUN=runStateMachine -o $(TARGET) $(CFLAGS) $(LIBS)
 play:
 	$(CC) $(PLAY) -o $(TARGET) $(CFLAGS) $(LIBS)
-attackAnimation:
-	$(CC) $(ATTACKANIMATION) -o attackAnimation $(CFLAGS) $(LIBS) -lSDL2_image
 
 
 clean:

@@ -202,7 +202,7 @@ currentBattle *createBattle(display *d, enemy *e)
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
     battle->hero = createEntity("buttons/offAttack.bmp", 50, 350, 200, 300, d);
     battle->enemy = createEntity(e->enemySprite, 750, 150, 350, 500, d);
-    battle->enemy = createEntity(e->dialogue, 500, 150, 350, 500, d);
+   
 
     return battle;
 }
@@ -220,18 +220,28 @@ void RenderPresent(display *d)
 	SDL_RenderPresent(d->ren);
 }
 
+void displayAttack(int attack, display *d)
+{
+    attackManager(attack, d->ren);
+}
+
 /*Test display module*/
 void testDisplay()
 {
-    currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
     display *d = createDisplay(1080, 720);
+    enemy *e = createEnemy(8);
+    currentBattle *battle = createBattle(d, e);
+    int attack;
 
     button *buttonArray;
     battleState state = PLAYERINPUT;
 
     buttonArray = createButtons(3, d);
-    renderButtons(buttonArray, 3, d, &state, battle);
-
+printf("here\n");
+    attack = renderButtons(buttonArray, 3, d, &state, battle);
+printf("here\n");
+    displayAttack(attack, d);
+printf("here\n");
     closeDisplay(d);
     succeed("Display module ok");
     return;

@@ -12,6 +12,6 @@ int renderButtons(button *buttonArray, int abilities, display *d, battleState *p
 void freeBattle(button *buttonArray, int buttons, currentBattle *battle);
 void closeDisplay(display *d);
 entity *createEntity(char *filename, int x, int y, int w, int h, display *d);
-currentBattle *createBattle(display *d);
+currentBattle *createBattle(display *d, enemy *e);
 void RenderRefresh(display *d, currentBattle *battle);
 void RenderPresent(display *d);

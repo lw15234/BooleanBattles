@@ -1,4 +1,4 @@
-#include "damage.h"
+#include "attackAnimation.h"
 
 typedef struct display display;
 typedef struct button button;

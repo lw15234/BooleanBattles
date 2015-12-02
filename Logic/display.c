@@ -220,18 +220,25 @@ void RenderPresent(display *d)
 	SDL_RenderPresent(d->ren);
 }
 
+void displayAttack(int attack, display *d)
+{
+    attackManager(attack, d->ren);
+}
+
 /*Test display module*/
 void testDisplay()
 {
-    currentBattle *battle = (currentBattle *)malloc(sizeof(currentBattle));
     display *d = createDisplay(1080, 720);
+    enemy *e = createEnemy(8);
+    currentBattle *battle = createBattle(d, e);
+    int attack;
 
     button *buttonArray;
     battleState state = PLAYERINPUT;
 
     buttonArray = createButtons(3, d);
-    renderButtons(buttonArray, 3, d, &state, battle);
-
+    attack = renderButtons(buttonArray, 3, d, &state, battle);
+    displayAttack(attack, d);
     closeDisplay(d);
     succeed("Display module ok");
     return;
