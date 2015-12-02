@@ -35,11 +35,7 @@ struct enemy *createEnemy(int level)
     strcpy(newEnemy->enemySprite, enemyArray[level].enemySprite);
     strcpy(newEnemy->background, enemyArray[level].background);
     strcpy(newEnemy->question, enemyArray[level].question);
-<<<<<<< HEAD
-	strcpy(newEnemy->dialogue, enemyArray[level].dialogue);
-=======
-	 strcpy(newEnemy->dialogue, enemyArray[level].dialogue);
->>>>>>> c210c393b7facccf28cd0fcf5d6d27cbde6fda52
+    strcpy(newEnemy->dialogue, enemyArray[level].dialogue);
     fillWeaknessArray(newEnemy, enemyArray[level].weakness);
     return newEnemy;
 }
