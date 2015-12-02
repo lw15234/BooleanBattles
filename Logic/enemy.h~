@@ -17,7 +17,7 @@ typedef struct enemy{
 <<<<<<< HEAD
     char background[30];
 	char question[30];
-	char dialogue[3][30];
+	char dialogue[30];
 =======
     char background[50];
 	 char question[30];
