@@ -1,14 +1,42 @@
 /*********************************************
 1. import and export values:
-This program needs to know where the battle was won.
-It exports where the player has reached, before entering the battle.
+This program needs to know the location where the last battle was fought, and how many levels have been unlocked.
+It exports the location number that the player has reached, before entering the battle.
 
-The buttons on the map requires knowledge about whether a battlefield is unlocked, for every available battlefield. 
+The buttons on the map requires knowledge about whether a battlefield is unlocked, for every available battlefield.
 It requires to import 3 int arrays:
 
 2. maintenance:
-This map is fully functional for the first 2 levels, and part of the 3rd level.
-More levels can be added.
+This map is fully functional for the first 3 levels, and shows map for 10 levels.
+
+More levels are about to be added, and reverse movement can be implemented:
+//algorithms to be implemented:
+[a. path coding notes:]
+for a path from (xa, yb) to (xc, yd):
+d_xa_xc = xc - xa;
+d_yd_yb = yd -yb;
+
+the total number of steps is :
+(xc - xa) + (yd -yb)
+
+if ( (yd -yb)>0 )
+{
+case_direction_x = 1; 
+  for (0: yd -yb)
+  {
+  case_direction_y = (  (xc - xa) + (yd -yb)  ) / (yd -yb);
+  case_direction_x = case_direction_y + 1;
+  //update path
+  //do animation
+  }
+}
+[b. reverse movement notes:]
+for a path from i to m, with n steps, 
+to go from i to m:
+at step a, one goes direction d, with velocity v;
+to go from m to i:
+at step (n-a), one goes direction -d, with velocity -v;
+
 It still requires refactoring.
 
 3. copyright notice:
@@ -21,7 +49,6 @@ Read txt file for more detail.
 All other errors are entirely Iguana team's responsibility.
 
 
-
 **********************************************/
 //#include "yucheng.h"
 //#include <string> //C++ header
@@ -32,20 +59,17 @@ All other errors are entirely Iguana team's responsibility.
 
 //Using SDL, SDL_image, standard IO, and strings
 #include <SDL.h>
-#include <SDL_image.h>
+//#include <SDL_image.h>
 
 #define LOCATION_ON_MAP_NUM_MAX 100
 
 //**import values******************************
-bool BattleWon = true;
+int locationCurrent = 0, locationCap = 2;
 
-int locationAccess [ LOCATION_ON_MAP_NUM_MAX ]; //which battlefields can the hero now access?
-int locationPosition_x [ LOCATION_ON_MAP_NUM_MAX ], locationPosition_y [ LOCATION_ON_MAP_NUM_MAX ]; //what are the battlefields' coordinations on the map?
 
 //**export values******************************
 int targetAreaLocation;
 
-int locationAccess [ LOCATION_ON_MAP_NUM_MAX ]; //which battlefields can the hero now access?
 
 /***SELECT FROM OPTIONS*****************************************/
 /***SELECT FROM OPTIONS*****************************************/
@@ -56,29 +80,58 @@ enum {debug_no, debug_test, debug_total};
 const int DEBUG_LEVEL = debug_no;
 
 //Screen dimension constants
-enum {mapX = 1032, mapY = 774};
+enum {mapX = 1080, mapY = 720};
 const int SCREEN_WIDTH = mapX;
 const int SCREEN_HEIGHT = mapY;
 
 enum { heroImage_x = 32, heroImage_y = 48 };
 
 //map locations
+const int locationMax = 9;
+
+int locationPosition_x [ LOCATION_ON_MAP_NUM_MAX ], locationPosition_y [ LOCATION_ON_MAP_NUM_MAX ]; //what are the battlefields' coordinations on the map?
+int locationAccess [ LOCATION_ON_MAP_NUM_MAX ]; //which battlefields can the hero now access?
+
 enum {screenBorderLength_left=46, screenBorderLength_right=43, screenBorderLength_up=45, screenBorderLength_down=38};
-typedef enum location_t {Gydanhil_x=337, Gydanhil_y=323, //location 0
-                         FroastoakVale_x = 432, FroastoakVale_y = 346, //location 1
-                         NessusRoad_x = 505, NessusRoad_y = 378 //location 2
+//typedef enum location_t {Gydanhil_x=337, Gydanhil_y=323, //location 0
+//                         FroastoakVale_x = 432, FroastoakVale_y = 346, //location 1
+//                         NessusRoad_x = 505, NessusRoad_y = 378 //location 2
+//                        } location_t;
+
+
+typedef enum location_t {location0x = 38, location0y = 50,
+                         location1x = 279, location1y = 50,
+                         location2x = 520, location2y = 51,
+                         location3x = 776, location3y = 13,
+                         location4x = 849, location4y = 184,
+                         location5x = 777, location5y = 366,
+                         location6x = 724, location6y = 503,
+                         location7x = 538, location7y = 549,
+                         location8x = 315, location8y = 503,
+                         location9x = 83, location9y = 579
                         } location_t;
 
-
-enum {Gydanhil = 0,
-      FroastoakVale = 1,
-      NessusRoad = 2
+enum {location0,
+      location1,
+      location2,
+      location3,
+      location4,
+      location5,
+      location6,
+      location7,
+      location8,
+      location9
      };
 
-int locationCurrent = 0, locationCap = 0, locationMax = 2;
+
 
 int sourceAreaLocation; //int targetAreaLocation;
 
+int d_sourceAreaLocation_targetAreaLocation = 0; //difference between sourceAreaLocation and targetAreaLocation
+int targetAreaLocationReplica; //save the final targetAreaLocation, while travel for the short term location
+
+bool targetLocationReached = false;
+bool marchingTowardsTargetLocation = false;
 //towards what direction is the hero walking?
 enum {map, back, front, left, right, sameDirection};
 
@@ -99,12 +152,12 @@ int heroPosition_x_Initial, heroPosition_y_Initial;
 enum { walkPace_x = 5, walkPace_y = 5 };
 
 //MAP
-const char *image_worldMap_name = "worldMap.jpg";
+char *image_worldMap_name = "Map_level_1.bmp";
 
 //****Mouse********************************************************
 //Button constants
-const int BUTTON_WIDTH = 15;
-const int BUTTON_HEIGHT = 15;
+const int BUTTON_WIDTH = 80;
+const int BUTTON_HEIGHT = 80;
 //const int TOTAL_BUTTONS = 4;
 
 //where is the mouse button?
@@ -204,12 +257,30 @@ void closeF();
 bool simplyUploadAMap () {
 	bool success = true;
 
-	char *locationImageName;
-
-	locationImageName = (char *) image_worldMap_name;
+	if ( locationCap == 0 ) {
+		image_worldMap_name = "Map_level_1.bmp";
+	} else if ( locationCap == 1 ) {
+		image_worldMap_name = "Map_level_2.bmp";
+	} else if ( locationCap == 2 ) {
+		image_worldMap_name = "Map_level_3.bmp";
+	} else if ( locationCap == 3 ) {
+		image_worldMap_name = "Map_level_4.bmp";
+	} else if ( locationCap == 4 ) {
+		image_worldMap_name = "Map_level_5.bmp";
+	} else if ( locationCap == 5 ) {
+		image_worldMap_name = "Map_level_6.bmp";
+	} else if ( locationCap == 6 ) {
+		image_worldMap_name = "Map_level_7.bmp";
+	} else if ( locationCap == 7 ) {
+		image_worldMap_name = "Map_level_8.bmp";
+	} else if ( locationCap == 8 ) {
+		image_worldMap_name = "Map_level_9.bmp";
+	} else if ( locationCap == 9 ) {
+		image_worldMap_name = "Map_level_10.bmp";
+	}
 
 	//Load media
-	if( !loadMedia( locationImageName ) ) {
+	if( !loadMedia( image_worldMap_name ) ) {
 		if ( DEBUG_LEVEL >= debug_test ) {
 			printf( "Failed to load media!\n" );
 			success = false;
@@ -240,71 +311,6 @@ bool simplyUploadAMap () {
 	return success;
 }
 
-////*******************simply show that if a location is open on map
-bool simplyUploadALocationAccessIndicator (  ) {
-	bool success = true;
-
-	char *locationImageName;
-
-
-
-//int locationAccess [ LOCATION_ON_MAP_NUM_MAX ];
-//int locationPosition_x [ LOCATION_ON_MAP_NUM_MAX ], locationPosition_y [ LOCATION_ON_MAP_NUM_MAX ];
-//int locationCurrent = 0, locationMax = 2;
-
-	if ( locationAccess [ locationCurrent ] == 1 ) { //is the location unlocked?
-		locationImageName = (char *) "2.1greenUnclicked.png";
-	} else {
-		locationImageName = (char *) "1.1redUnclicked.png";
-	}
-
-	//Load media
-	if( !loadMedia( locationImageName ) ) {
-		if ( DEBUG_LEVEL >= debug_test ) {
-			printf( "Failed to load media!\n" );
-			success = false;
-		}
-	} else {
-
-		//Color key image
-		SDL_SetColorKey( gImageCurrent, SDL_TRUE, SDL_MapRGB( gImageCurrent->format, 0xFF, 0xFF, 0xFF ) );
-
-		//Get image dimensions
-		mWidth = gImageCurrent->w;
-		mHeight = gImageCurrent->h;
-		if (DEBUG_LEVEL >= debug_test) {
-			printf("image_worldMap_name: %s, mWidth: %d, mHeight: %d\n", image_worldMap_name, mWidth, mHeight);
-		}
-
-		/*
-				//change light indicator's location
-				if ( locationCurrent == Gydanhil ) {
-					locationPosition_x [ Gydanhil ] = Gydanhil_x; //place button on the location's x, y coordination
-					locationPosition_y [ Gydanhil ] = Gydanhil_y;
-				}
-		*/
-		//Apply the image
-		SDL_Rect gImageCurrentPosition;
-		gImageCurrentPosition.x = locationPosition_x [ locationCurrent ];
-		gImageCurrentPosition.y = locationPosition_y [ locationCurrent ];
-
-		//if (DEBUG_LEVEL >= debug_test) {
-		printf("gImageCurrentPosition.x: %d, gImageCurrentPosition.y: %d\n", gImageCurrentPosition.x, gImageCurrentPosition.y);
-		//}
-
-
-		SDL_BlitSurface( gImageCurrent, NULL, gScreenSurface, &gImageCurrentPosition );
-
-		//Update the surface
-		//SDL_UpdateWindowSurface( gWindow );
-
-		//do you want to wait ?
-		//SDL_Delay( 0 );
-		//**free*************************
-		freeF(gWindow, gScreenSurface, gImageCurrent);
-	}
-	return success;
-}
 
 //which image do you want to show ?
 int chooseImage(char **gImageCurrent_name, size_t imageUseNumber_current, size_t imageUseNumber_total, int walkingDirection, int *walkingDirectionPrevious) {
@@ -318,25 +324,25 @@ int chooseImage(char **gImageCurrent_name, size_t imageUseNumber_current, size_t
 	//images' file names:
 
 //BACK
-	const char *image_hero1_back_01_name = "hero1_back_01.png";
-	const char *image_hero1_back_02_name = "hero1_back_02.png";
-	const char *image_hero1_back_03_name = "hero1_back_03.png";
-	const char *image_hero1_back_04_name = "hero1_back_04.png";
+	const char *image_hero1_back_01_name = "hero1_back_01.bmp";
+	const char *image_hero1_back_02_name = "hero1_back_02.bmp";
+	const char *image_hero1_back_03_name = "hero1_back_03.bmp";
+	const char *image_hero1_back_04_name = "hero1_back_04.bmp";
 //FRONT
-	const char *image_hero1_front_01_name = "hero1_front_01.png";
-	const char *image_hero1_front_02_name = "hero1_front_02.png";
-	const char *image_hero1_front_03_name = "hero1_front_03.png";
-	const char *image_hero1_front_04_name = "hero1_front_04.png";
+	const char *image_hero1_front_01_name = "hero1_front_01.bmp";
+	const char *image_hero1_front_02_name = "hero1_front_02.bmp";
+	const char *image_hero1_front_03_name = "hero1_front_03.bmp";
+	const char *image_hero1_front_04_name = "hero1_front_04.bmp";
 //UP
-	const char *image_hero1_left_01_name = "hero1_left_01.png";
-	const char *image_hero1_left_02_name = "hero1_left_02.png";
-	const char *image_hero1_left_03_name = "hero1_left_03.png";
-	const char *image_hero1_left_04_name = "hero1_left_04.png";
+	const char *image_hero1_left_01_name = "hero1_left_01.bmp";
+	const char *image_hero1_left_02_name = "hero1_left_02.bmp";
+	const char *image_hero1_left_03_name = "hero1_left_03.bmp";
+	const char *image_hero1_left_04_name = "hero1_left_04.bmp";
 //DOWN
-	const char *image_hero1_right_01_name = "hero1_right_01.png";
-	const char *image_hero1_right_02_name = "hero1_right_02.png";
-	const char *image_hero1_right_03_name = "hero1_right_03.png";
-	const char *image_hero1_right_04_name = "hero1_right_04.png";
+	const char *image_hero1_right_01_name = "hero1_right_01.bmp";
+	const char *image_hero1_right_02_name = "hero1_right_02.bmp";
+	const char *image_hero1_right_03_name = "hero1_right_03.bmp";
+	const char *image_hero1_right_04_name = "hero1_right_04.bmp";
 
 
 	//continue the same direction?
@@ -545,15 +551,6 @@ bool init() {
 			} else {
 				//Initialize renderer color
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
-
-				//Initialize PNG loading
-				int imgFlags = IMG_INIT_PNG;
-				if( !( IMG_Init( imgFlags ) & imgFlags ) ) {
-					if ( DEBUG_LEVEL >= debug_test ) {
-						printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-					}
-					success = false;
-				}
 			}
 		}
 	}
@@ -576,7 +573,7 @@ bool loadMedia(const char *gImageCurrent_name) {
 	bool success = true;
 
 	//Load splash image
-	gImageCurrent = IMG_Load( gImageCurrent_name );
+	gImageCurrent = SDL_LoadBMP( gImageCurrent_name );
 	if( gImageCurrent == NULL ) {
 		if ( DEBUG_LEVEL >= debug_test ) {
 			printf( "Unable to load image %s! SDL Error: %s\n", gImageCurrent_name, SDL_GetError() );
@@ -597,28 +594,26 @@ void setPosition( int x, int y ) {
 }
 
 int handleMouseEvent( SDL_Event* e ) {
-	printf("entering handleEvent:\n");
+	if ( DEBUG_LEVEL >= debug_test ) {
+		printf("entering handleEvent:\n");
+	}
 
 	//Where's the cursor?
 	int x, y;
 	SDL_GetMouseState( &x, &y );
 
 
-//	int locationPosition_x [ locationCurrent ], locationPosition_y [ locationCurrent ];
-//	int locationCurrent = 0, locationMax = 2;
-	//set the location indicator button
 	mButtonPosition.x = locationPosition_x [ locationCurrent ];
 	mButtonPosition.y = locationPosition_y [ locationCurrent ];
 
+	if ( DEBUG_LEVEL >= debug_test ) {
+		printf("locationCurrent:%d, x: %d, y: %d; mButtonPosition.x: %d, mButtonPosition.y: %d\n", locationCurrent, x, y, mButtonPosition.x, mButtonPosition.y);
+	}
 
-	printf("locationCurrent:%d, x: %d, y: %d; mButtonPosition.x: %d, mButtonPosition.y: %d\n", locationCurrent, x, y, mButtonPosition.x, mButtonPosition.y);
 
-
-	//How is mouse being pressed?
-	//if( e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP ) {
-	//printf("SDL_MOUSEMOTION: %d, SDL_MOUSEBUTTONDOWN: %d, SDL_MOUSEBUTTONUP: %d\n", SDL_MOUSEMOTION, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP );
-	printf("e->type: %d\n", e->type );
-	//}
+	if ( DEBUG_LEVEL >= debug_test ) {
+		printf("e->type: %d\n", e->type );
+	}
 
 	//Check if mouse is in button
 	bool inside = true;
@@ -695,16 +690,21 @@ bool handleEventsInQueue(SDL_Event e, bool *quit) {
 		for( locationCurrent = 0; locationCurrent <= locationCap; locationCurrent++ ) { //try each unlocked scene
 			handleMouseEvent( &e );
 			//If the cursor is inside the button, how's the mouse being pressed?
-			printf("mCurrentState: %d\n", mCurrentState);
+			if ( DEBUG_LEVEL >= debug_test ) {
+				printf("mCurrentState: %d\n", mCurrentState);
+			}
 
 			if ( mCurrentState == BUTTON_SPRITE_MOUSE_UP ) {
 				targetAreaLocation = locationCurrent; //target Location chosen
+				targetAreaLocationReplica = targetAreaLocation; //note down the final goal
+
 				goto theUserHasPressedButton;
 			}
 		}
 		//}
 	}
 theUserHasPressedButton:
+	printf("in handleEventsInQueue: targetAreaLocation%d\n", targetAreaLocation);
 
 	return *quit;
 }
@@ -730,22 +730,9 @@ void heroWalking (int *heroPosition_x, int *heroPosition_y, int *dx, int *dy, SD
 
 	SDL_Rect gImageCurrentPosition;
 
-	//towards what direction is the hero walking?
-	//walkingDirection = map, walkingDirection_replica; //load the map first
-	//walkingDirectionPrevious = walkingDirection;
-
-
-
-
-
-
 	//*******************simply upload a map
 	simplyUploadAMap ();
 	//*******************button: can the locations be accessed?
-	//int locationCurrent = 0, locationMax = 2;
-	for ( locationCurrent = 0; locationCurrent <= locationMax; locationCurrent++ ) { //upload a button, locked or unlocked, onto the map
-		simplyUploadALocationAccessIndicator (  );
-	}
 
 	//which image will be shown at this moment?
 	imageUseNumber_current = chooseImage( &gImageCurrent_name, imageUseNumber_current, imageUseNumber_total, walkingDirection, &walkingDirectionPrevious );
@@ -795,22 +782,195 @@ void heroWalking (int *heroPosition_x, int *heroPosition_y, int *dx, int *dy, SD
 //define where the locations are
 void fillLocationCoordination() {
 
-	locationPosition_x [ Gydanhil ] = Gydanhil_x; //location 0
-	locationPosition_y [ Gydanhil ] = Gydanhil_y;
+	locationPosition_x [ location0 ] = location0x ; //location 0
+	locationPosition_y [ location0 ] = location0y ;
 
-	locationPosition_x [ FroastoakVale ] = FroastoakVale_x; //location 1
-	locationPosition_y [ FroastoakVale ] = FroastoakVale_y;
+	locationPosition_x [ location1 ] = location1x ; //location 1
+	locationPosition_y [ location1 ] = location1y ;
 
-	locationPosition_x [ NessusRoad ] = NessusRoad_x; //location 2
-	locationPosition_y [ NessusRoad ] = NessusRoad_y;
+	locationPosition_x [ location2 ] = location2x ; //location 2
+	locationPosition_y [ location2 ] = location2y ;
+
+	locationPosition_x [ location3 ] = location3x ; //location 3
+	locationPosition_y [ location3 ] = location3y ;
+
+	locationPosition_x [ location4 ] = location4x ; //location 4
+	locationPosition_y [ location4 ] = location4y ;
+
+	locationPosition_x [ location5 ] = location5x ; //location 5
+	locationPosition_y [ location5 ] = location5y ;
+
+	locationPosition_x [ location6 ] = location6x ; //location 6
+	locationPosition_y [ location6 ] = location6y ;
+
+	locationPosition_x [ location7 ] = location7x ; //location 7
+	locationPosition_y [ location7 ] = location7y ;
+
+	locationPosition_x [ location8 ] = location8x ; //location 8
+	locationPosition_y [ location8 ] = location8y ;
+
+	locationPosition_x [ location9 ] = location9x ; //location 9
+	locationPosition_y [ location9 ] = location9y ;
 
 }
 
 void fillLocationAccessibility() {
-	locationAccess[ Gydanhil ] = 1; //location 0
-	locationAccess[ FroastoakVale ] = 0; //location 1
-	locationAccess[ NessusRoad ] = 0; //location 2
 
+	int temp;
+
+	for ( temp=0; temp<=locationCap; temp++ )
+		locationAccess[ temp ] = 1;
+
+}
+
+
+//**********************code path from one level to another
+
+//march from location 0 - 1
+void marchFromLocation0To1 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+
+	//targetAreaLocation = 1;
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( 1 ): {
+			walkingDirection = right;
+			dx = walkPace_x;
+			dy = 0;
+			//heroPosition_x += 100;
+
+			break;
+		}
+		case( INT_MAX - 1 ): {
+			walkingDirection = left;
+			dx = -walkPace_x;
+			dy = 0;
+			//heroPosition_x -= 100;
+
+			break;
+		}
+		case( INT_MAX ): {
+			walkingDirection = front;
+			dy = walkPace_y;
+			dx = 0;
+			//heroPosition_y += 100;
+			break;
+		}
+		case( ( location1x - location0x  )/walkPace_x ): {
+			walkingDirection = back;
+			dy = -walkPace_y;
+			dx = 0;
+			//heroPosition_y -= 100;
+			break;
+		}
+		case(  ( ( location1x - location0x  )/walkPace_x ) + 1  ): {//arrived target location
+			dy = 0;
+			dx = 0;
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+//				mCurrentState = BUTTON_SPRITE_MOUSE_UP;
+
+				marchingTowardsTargetLocation == true;
+
+				//targetAreaLocation++;
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+
+}
+
+//march from location 1 - 2
+void marchFromLocation1To2 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+
+
+	//targetAreaLocation = 1;
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( 1 ): {
+			walkingDirection = right;
+			dx = walkPace_x;
+			dy = 0;
+			//heroPosition_x += 100;
+
+			break;
+		}
+		case( INT_MAX - 1 ): {
+			walkingDirection = left;
+			dx = -walkPace_x;
+			dy = 0;
+			//heroPosition_x -= 100;
+
+			break;
+		}
+		case( INT_MAX ): {
+			walkingDirection = front;
+			dy = walkPace_y;
+			dx = 0;
+			//heroPosition_y += 100;
+			break;
+		}
+		case( ( location2x - location1x  )/walkPace_x ): {
+			walkingDirection = back;
+			dy = -walkPace_y;
+			dx = 0;
+			//heroPosition_y -= 100;
+			break;
+		}
+		case(  ( ( location2x - location1x  )/walkPace_x ) + 1  ): {//arrived target location
+			dy = 0;
+			dx = 0;
+			targetLocationReached = true;
+			marchingTowardsTargetLocation = false;
+			locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+			printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
 }
 
 /****MAIN*************************************/
@@ -828,30 +988,24 @@ int main( int argc, char* args[] ) {
 
 	//define where the locations are
 	fillLocationCoordination();
-	printf( "locationPosition_x [ Gydanhil ]: %d, locationPosition_y [ Gydanhil ]: %d\n", locationPosition_x [ Gydanhil ], locationPosition_y [ Gydanhil ] );
-	printf( "locationPosition_x [ FroastoakVale ]: %d, locationPosition_y [ FroastoakVale ]: %d\n", locationPosition_x [ FroastoakVale ], locationPosition_y [ FroastoakVale ] );
-	printf( "locationPosition_x [ NessusRoad ]: %d, locationPosition_y [ NessusRoad ]: %d\n", locationPosition_x [ NessusRoad ], locationPosition_y [ NessusRoad ] );
+	if ( DEBUG_LEVEL >= debug_test ) {
+		printf( "locationPosition_x [ location0 ]: %d, locationPosition_y [ location0 ]: %d\n", locationPosition_x [ location0 ], locationPosition_y [ location0 ] );
+		printf( "locationPosition_x [ location1 ]: %d, locationPosition_y [ location1 ]: %d\n", locationPosition_x [ location1 ], locationPosition_y [ location1 ] );
+		printf( "locationPosition_x [ location2 ]: %d, locationPosition_y [ location2 ]: %d\n", locationPosition_x [ location2 ], locationPosition_y [ location2 ] );
+	}
 
 	//previous accessibility
 	fillLocationAccessibility();
-	printf( "locationAccess[ Gydanhil ]: %d, locationAccess[ FroastoakVale ]: %d, locationAccess[ NessusRoad ]: %d\n", locationAccess[ Gydanhil ], locationAccess[ FroastoakVale ], locationAccess[ NessusRoad ] );
-
-
-	//the locations that can be accessed.
-	if ( BattleWon == true ) {
-		int a = locationCurrent+1;
-		locationAccess [ a ] = 1; //unlock new location
-		locationCap ++; //we are tautologous, for the time being...
+	if ( DEBUG_LEVEL >= debug_test ) {
+		printf( "locationAccess[ location0 ]: %d, locationAccess[ location1 ]: %d, locationAccess[ location2 ]: %d\n", locationAccess[ location0 ], locationAccess[ location1 ], locationAccess[ location2 ] );
 	}
 
-	//new accessibility
-	//fillLocationAccessibility();
-	printf( "locationAccess[ Gydanhil ]: %d, locationAccess[ FroastoakVale ]: %d, locationAccess[ NessusRoad ]: %d\n", locationAccess[ Gydanhil ], locationAccess[ FroastoakVale ], locationAccess[ NessusRoad ] );
+
 
 
 	//hero's initial position
-	heroPosition_x_Initial = locationPosition_x [ locationCurrent ] - 0.5 * heroImage_x;
-	heroPosition_y_Initial = locationPosition_y [ locationCurrent ] - heroImage_y;
+	heroPosition_x_Initial = locationPosition_x [ locationCurrent ] - 0.5 * heroImage_x + 0.5 * BUTTON_WIDTH;
+	heroPosition_y_Initial = locationPosition_y [ locationCurrent ] - heroImage_y + BUTTON_HEIGHT - 10;
 
 	//register where did the hero start
 	sourceAreaLocation = locationCurrent;
@@ -889,96 +1043,58 @@ int main( int argc, char* args[] ) {
 		}
 	} else {
 
-		bool targetLocationReached = false;
-		bool marchingTowardsTargetLocation = false;
+		targetLocationReached = false;
+		marchingTowardsTargetLocation = false;
 
 		/***loop till quit*************************/
-		while(  (!quit) && (!targetLocationReached) ) { //***LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOP*******
+		while(  ( quit==false ) && ( targetLocationReached==false )  ) { //***LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOP*******
+
 
 			//is the user quitting or pressing mouse?
 			handleEventsInQueue( e, &quit );
+
+			//what's the current difference between start and end location?
+			d_sourceAreaLocation_targetAreaLocation = targetAreaLocationReplica - sourceAreaLocation;
+			printf("sourceAreaLocation: %d, targetAreaLocation: %d, targetAreaLocationReplica: %d, d_sourceAreaLocation_targetAreaLocation%d\n", sourceAreaLocation, targetAreaLocation, targetAreaLocationReplica, d_sourceAreaLocation_targetAreaLocation);
+
 
 			//walk there, if button for a location is clicked
 			if (  (  ( mCurrentState == BUTTON_SPRITE_MOUSE_UP ) && ( marchingTowardsTargetLocation == false )  ) || ( marchingTowardsTargetLocation == true )  ) {
 				marchingTowardsTargetLocation = true; //marching
 
-				if ( ( targetAreaLocation==1 )&&( sourceAreaLocation == targetAreaLocation - 1) ) {//if location 1's button is pressed, march from location 0
-					targetAreaLocation = 1;
-					//choose which image to upload
-					switch ( imageUploadTurn  ) {
-						case( 1 ):
-						case( 10 ):
-						case( 12 ):
-						case( 15 ):
-						case( 18 ):
-						case( 23 ):
-						case( 28 ): {
-							walkingDirection = right;
-							dx = walkPace_x;
-							dy = 0;
-							//heroPosition_x += 100;
+				if ( sourceAreaLocation == targetAreaLocation ) { //if reenter current battlefield
+					printf("targetAreaLocation: %d\n", targetAreaLocation);
+					return targetAreaLocation;
 
-							break;
-						}
-						case( 9999 ): {
-							walkingDirection = left;
-							dx = -walkPace_x;
-							dy = 0;
-							//heroPosition_x -= 100;
 
-							break;
-						}
-						case( 7 ):
-						case( 11 ):
-						case( 13 ):
-						case( 17 ):
-						case( 22 ): {
-							walkingDirection = front;
-							dy = walkPace_y;
-							dx = 0;
-							//heroPosition_y += 100;
-							break;
-						}
-						case( 27 ):
-						case( 29 ): {
-							walkingDirection = back;
-							dy = -walkPace_y;
-							dx = 0;
-							//heroPosition_y -= 100;
-							break;
-						}
-						case( 30 ): {//arrived target location
-							dy = 0;
-							dx = 0;
-							targetLocationReached = true;
-							marchingTowardsTargetLocation = false;
-							locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
-							printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
-							
-							break;
-						}
-					} //
-					(imageUploadTurn) ++;
-					/*
-									//have we arrived? or on the way?
-									(imageUploadTurn) ++;
-									if ( imageUploadTurn >= 30 ) {
-										//imageUploadTurn = 1;
 
-									} else {
-										marchingTowardsTargetLocation = true;
-									}
-					*/
-					if ( DEBUG_LEVEL >= debug_test ) {
-						printf("imageUploadTurn: %d\n", imageUploadTurn);
+				} else if ( sourceAreaLocation <= targetAreaLocation - 1) { //if from early battlefield to later battlefield
+
+
+					if ( d_sourceAreaLocation_targetAreaLocation >= 2 ) { // if the final goal isn't the nex battle
+						targetAreaLocation = sourceAreaLocation + 1; //set a short term goal
+
 					}
 
+					//march from location 0 - 1
+					if (  ( targetAreaLocation == 1 )  ) {
+						marchFromLocation0To1 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
 
-					if ( DEBUG_LEVEL >= debug_test ) {
-						printf( "dx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", dx, dy, walkPace_x, walkPace_y );
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+					//march from location 1 - 2
+					else if (  ( targetAreaLocation == 2 )  ) {
+						marchFromLocation1To2 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
 					}
 
-					printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
 				} else { //unlocked area
 					marchingTowardsTargetLocation = false; //not marching
 				}
@@ -986,6 +1102,7 @@ int main( int argc, char* args[] ) {
 				walkingDirection = front;
 				dy = 0;
 				dx = 0;
+
 			}
 			//walking on map
 			heroWalking ( &heroPosition_x, &heroPosition_y, &dx, &dy, e, quit, &imageUploadTurn);
@@ -1000,6 +1117,8 @@ int main( int argc, char* args[] ) {
 		closeF();
 
 	}
+	printf("targetLocationReached: %d\n"), targetLocationReached;
+	printf("targetAreaLocation: %d\n", targetAreaLocation);
 
 	return targetAreaLocation;
 }
