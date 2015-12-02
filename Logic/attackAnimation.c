@@ -5,6 +5,9 @@
 #define FRAMES 10
 #define WIDTH 250
 #define HEIGHT 250
+#define XPOS 250
+#define YPOS 360
+#define SPEED 20
 
 typedef struct projectile{
     SDL_Texture *tex;
@@ -64,6 +67,7 @@ void attackManager(int attack, SDL_Renderer *ren)
 void renderAttack(int attack, projectile *p, SDL_Renderer *ren)
 {
     selectAttack(attack, p);
+    SDL_SetColorKey(p->sur, SDL_TRUE, SDL_MapRGB(p->sur->format, 228, 129, 250));
     p->tex = SDL_CreateTextureFromSurface(ren, p->sur);
     animateAttack(p, ren);
 }
@@ -119,12 +123,14 @@ void animateAttack(projectile *p, SDL_Renderer *ren)
 {
     int i;
     SDL_Rect *clip = NULL;
-    SDL_Rect renderQuad = {0, 0, WIDTH, HEIGHT};
+    SDL_Rect renderQuad = {XPOS, YPOS, WIDTH, HEIGHT};
     Uint32 t;
 
+    
     for(i = 0; i < 100; i++){
+        SDL_RenderRe
         clip = &p->spriteClips[i % FRAMES];
-        renderQuad.x = i * 10;
+        renderQuad.x = XPOS + i * SPEED;
         SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
         SDL_RenderPresent(ren);
         t = SDL_GetTicks();
