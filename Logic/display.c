@@ -84,7 +84,9 @@ button *createButtons(int abilities, display *d)
             buttonArray[i].buttonPos.x = x + (w + 10) * i;
             if(fscanf(buttonFiles, "%s %s", offFile, onFile) == 2){
                 buttonArray[i].buttonSur[0] = SDL_LoadBMP(offFile);
+				SDL_SetColorKey( buttonArray[i].buttonSur[0], SDL_TRUE, SDL_MapRGB(buttonArray[i].buttonSur[0]->format, 228, 129, 250 ));
                 buttonArray[i].buttonSur[1] = SDL_LoadBMP(onFile);
+				SDL_SetColorKey( buttonArray[i].buttonSur[1], SDL_TRUE, SDL_MapRGB(buttonArray[i].buttonSur[1]->format, 228, 129, 250 ));
                 buttonArray[i].buttonTex[0] = 
                     SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[0]);
                 buttonArray[i].buttonTex[1] = 
@@ -200,7 +202,7 @@ currentBattle *createBattle(display *d, enemy *e)
 
     battle->sur = SDL_LoadBMP(e->background);
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
-    battle->hero = createEntity("buttons/offAttack.bmp", 50, 350, 200, 300, d);
+    battle->hero = createEntity("enemies/hero.bmp", 50, 350, 200, 300, d);
     battle->enemy = createEntity(e->enemySprite, 750, 150, 350, 500, d);
    
 
