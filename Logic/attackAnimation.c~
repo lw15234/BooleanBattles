@@ -67,7 +67,7 @@ void attackManager(int attack, SDL_Renderer *ren)
 void renderAttack(int attack, projectile *p, SDL_Renderer *ren)
 {
     selectAttack(attack, p);
-    SDL_SetColorKey(p->sur, SDL_TRUE, SDL_MapRGB(p->sur->format, 255, 255, 255));
+    SDL_SetColorKey(p->sur, SDL_TRUE, SDL_MapRGB(p->sur->format, 228, 129, 250));
     p->tex = SDL_CreateTextureFromSurface(ren, p->sur);
     animateAttack(p, ren);
 }

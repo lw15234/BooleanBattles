@@ -128,7 +128,6 @@ void animateAttack(projectile *p, SDL_Renderer *ren)
 
     
     for(i = 0; i < 100; i++){
-        SDL_RenderRe
         clip = &p->spriteClips[i % FRAMES];
         renderQuad.x = XPOS + i * SPEED;
         SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
