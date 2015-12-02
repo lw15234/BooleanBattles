@@ -16,6 +16,7 @@ typedef struct enemy{
     char enemySprite[30];
     char background[30];
 	char question[30];
+	char dialogue[30];
 }enemy;
 
 /*Create an enemy structure*/
