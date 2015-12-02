@@ -8,9 +8,9 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
     battleState* pState = &currentState;
     enemy *newEnemy = NULL;
     currentBattle *battle = NULL;
-    int attack = 0, result = 0, abilities = 0;
+    int attack = 0, result = 0, abilities = 0, success;
     button *buttonArray = NULL;
-
+    int used[ATTACKCOMBOS] = {FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER};
 
     while(result == 0){
         switch(currentState){
@@ -26,15 +26,16 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 currentState = PLAYERINPUT;
                 break;
             case PLAYERINPUT:
-                attack = renderButtons(buttonArray, abilities, d, pState, battle);
+                attack = renderButtons(buttonArray, abilities, used, d, pState, battle);
                 //This allows the user to close the game
                 if(attack == -1){
-                    result = -2;
+                    return -2;
                 }
-                displayAttack(attack, d);
                 break;
             case PLAYERACTION:
-                damageState(attack, newEnemy, playerHealth, pState);
+                success = checkAttack(attack, newEnemy);
+                displayAttack(attack, d, success);
+                damageState(success, newEnemy, playerHealth, pState);
                 break;
             case WIN:
                 result = 1;

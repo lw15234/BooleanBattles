@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 /*Something to fill space in our weakness array. Not an actual attack.*/
-#define FILLER -99
 
 
 void fillWeaknessArray(enemy* newEnemy, int weaknesses[]);
@@ -21,7 +20,7 @@ struct enemy *createEnemy(int level)
         {1, 1, "!!F",                   {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/goblin.bmp", "background.bmp", "questions/three.bmp", "dialogue/three.bmp" },
         {2, 1, "F && I",                { 11,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/fox.bmp", "background.bmp", "questions/four.bmp", "dialogue/four.bmp" },
         {2, 3, "F || I",                {  1,  10,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/werewolf.bmp", "Map_Levels/mysterious_forest.bmp", "questions/five.bmp", "dialogue/five.bmp" },
-        {2, 3, "F || !I",               {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/vampire.bmp", "background.bmp", "questions/six.bmp", "dialogue/six.bmp" },
+        {2, 3, "F || !I",               {  0,   1,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/vampire.bmp", "background.bmp", "questions/six.bmp", "dialogue/six.bmp" },
         {2, 3, "!(F && I)",             {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/ninja.bmp", "Map_Levels/fire_valley.bmp", "questions/seven.bmp","dialogue/seven.bmp" },
         {3, 1, "F && I && L",           {111,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/alien.bmp", "Map_Levels/space.bmp", "questions/eight.bmp", "dialogue/eight.bmp" },
         {3, 3, "(F || I) && L",         {101, 110, 111,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/oneeyedmonster.bmp", "Map_Levels/egyptian.bmp", "questions/nine.bmp", "dialogue/nine.bmp" },

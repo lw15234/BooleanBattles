@@ -4,6 +4,8 @@
 
 /*The total number of possible attacks*/
 #define ATTACKCOMBOS 8
+/*Filler number to designate empty space in attack arrays*/
+#define FILLER -99
 /*Number of levels*/
 #define LEVELS 10
 

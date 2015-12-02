@@ -8,6 +8,8 @@
 #define XPOS 250
 #define YPOS 360
 #define SPEED 20
+#define LENGTH 100
+#define REFLECTION 20
 
 typedef struct projectile{
     SDL_Texture *tex;
@@ -19,11 +21,11 @@ typedef struct projectile{
 
 projectile *createProjectile();
 void destroyProjectile(projectile *p);
-void renderAttack(int attack, projectile *p, SDL_Renderer *ren);
+void renderAttack(int attack, projectile *p, SDL_Renderer *ren, int success);
 void selectAttack(int attack, projectile *p);
 void setAttackAttr(projectile *p, SDL_Renderer *ren);
 void fillClips(projectile *p);
-void animateAttack(projectile *p, SDL_Renderer *ren);
+void animateAttack(projectile *p, SDL_Renderer *ren, int success);
 
 
 projectile *createProjectile(){
@@ -44,7 +46,7 @@ void destroyProjectile(projectile *p){
     return;
 }
 
-void attackManager(int attack, SDL_Renderer *ren)
+void attackManager(int attack, SDL_Renderer *ren, int success)
 {
     int i;
 
@@ -52,24 +54,23 @@ void attackManager(int attack, SDL_Renderer *ren)
     fillClips(p);
 
     if(attack == 0){
-        renderAttack(3, p, ren);
+        renderAttack(3, p, ren, success);
     }
     else{
         for(i = 0; i < 3; i++){
             if((attack / (int)pow(10, i)) % 10){
-                renderAttack(i, p, ren);
+                renderAttack(i, p, ren, success);
             }
         }
     }
     destroyProjectile(p);
 }
 
-void renderAttack(int attack, projectile *p, SDL_Renderer *ren)
+void renderAttack(int attack, projectile *p, SDL_Renderer *ren, int success)
 {
     selectAttack(attack, p);
-    SDL_SetColorKey(p->sur, SDL_TRUE, SDL_MapRGB(p->sur->format, 228, 129, 250));
-    p->tex = SDL_CreateTextureFromSurface(ren, p->sur);
-    animateAttack(p, ren);
+    setAttackAttr(p, ren);
+    animateAttack(p, ren, success);
 }
 
 void selectAttack(int attack, projectile *p)
@@ -106,7 +107,11 @@ void selectAttack(int attack, projectile *p)
     }
 }
 
-
+void setAttackAttr(projectile *p, SDL_Renderer *ren)
+{
+    SDL_SetColorKey(p->sur, SDL_TRUE, SDL_MapRGB(p->sur->format, 228, 129, 250));
+    p->tex = SDL_CreateTextureFromSurface(ren, p->sur);    
+}
 
 void fillClips(projectile *p)
 {
@@ -119,20 +124,39 @@ void fillClips(projectile *p)
     }
 }
 
-void animateAttack(projectile *p, SDL_Renderer *ren)
+void animateAttack(projectile *p, SDL_Renderer *ren, int success)
 {
     int i;
     SDL_Rect *clip = NULL;
     SDL_Rect renderQuad = {XPOS, YPOS, WIDTH, HEIGHT};
     Uint32 t;
 
-    
-    for(i = 0; i < 100; i++){
-        clip = &p->spriteClips[i % FRAMES];
-        renderQuad.x = XPOS + i * SPEED;
-        SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
-        SDL_RenderPresent(ren);
-        t = SDL_GetTicks();
-        SDL_Delay(20 - (t % 20));
+    if(success){
+        for(i = 0; i < LENGTH; i++){
+            clip = &p->spriteClips[i % FRAMES];
+            renderQuad.x = XPOS + i * SPEED;
+            SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
+            SDL_RenderPresent(ren);
+            t = SDL_GetTicks();
+            SDL_Delay(20 - (t % 20));
+        }
+    }
+    else{
+        for(i = 0; i < REFLECTION; i++){
+            clip = &p->spriteClips[i % FRAMES];
+            renderQuad.x = XPOS + i * SPEED;
+            SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
+            SDL_RenderPresent(ren);
+            t = SDL_GetTicks();
+            SDL_Delay(20 - (t % 20));
+        }
+        for(i = REFLECTION; i < LENGTH; i++){
+            clip = &p->spriteClips[i % FRAMES];
+            renderQuad.x = XPOS + (2 *REFLECTION - i) * SPEED;
+            SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
+            SDL_RenderPresent(ren);
+            t = SDL_GetTicks();
+            SDL_Delay(20 - (t % 20));
+        }        
     }
 }
