@@ -22,9 +22,9 @@ the total number of steps is :
 if ( (yd -yb)>0 )
 {
 case_direction_x = 1; 
-  for (0: yd -yb)
+   for (0 <= N <= yd-yb)
   {
-  case_direction_y = (  (xc - xa) + (yd -yb)  ) / (yd -yb);
+  case_direction_y = N*(  (xc - xa) + (yd -yb)  ) / (yd -yb);
   case_direction_x = case_direction_y + 1;
   //update path
   //do animation
