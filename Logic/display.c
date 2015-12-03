@@ -10,14 +10,6 @@ struct button{
     SDL_Surface *buttonSur[2];
 };
 
-struct display{
-    int width, height;
-    SDL_Window *win;
-    SDL_Surface *sur;
-    SDL_Renderer *ren;
-    SDL_Event *e;
-};
-
 struct entity{
     SDL_Rect entityPos;
     SDL_Texture *entityTex;
@@ -224,11 +216,6 @@ void RenderRefresh(display *d, currentBattle *battle)
 	SDL_RenderCopy(d->ren, battle->question->entityTex, NULL, &battle->question->entityPos);
     SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
     SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
-}
-
-void RenderPresent(display *d)
-{
-	SDL_RenderPresent(d->ren);
 }
 
 void displayAttack(int attack, display *d, int success)

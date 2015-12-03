@@ -1,0 +1,47 @@
+#include "baseDisplay.h"
+
+
+
+display *createDisplay(int width, int height)
+{
+    if(SDL_Init(SDL_INIT_VIDEO) < 0){
+        fprintf(stderr, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+        exit(1);
+    }
+    display *d = (display *)malloc(sizeof(display));
+    d->width = width;
+    d->height = height;
+    d->win = NULL;
+    d->ren = NULL;
+    d->win = SDL_CreateWindow("Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, d->width, d->height, 0);
+    if(d->win == NULL){
+        fprintf(stderr, "Window could not be created! SDL_Error: %s.\n", SDL_GetError());
+        exit(1);
+    }
+    d->ren = SDL_CreateRenderer(d->win, -1, SDL_RENDERER_ACCELERATED);
+    if(d->ren == NULL){
+        fprintf(stderr, "Renderer could not be created! SDL_Error: %s.\n", SDL_GetError());
+        exit(1);
+    }
+    SDL_RenderPresent(d->ren);
+    return d;
+}
+
+void closeDisplay(display *d)
+{
+    SDL_DestroyWindow(d->win);
+    SDL_Quit();
+    free(d);
+    return;
+}
+
+void testBaseDisplay()
+{
+    display *d = createDisplay(WINDOWWIDTH, WINDOWHEIGHT);
+    if(d->width != WINDOWWIDTH || d->height != WINDOWHEIGHT){
+        fail("Window incorrect size");
+    }
+    SDL_Delay(2000);
+    closeDisplay(d);
+    succeed("Base Display ok");
+}

@@ -12,7 +12,6 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
     button *buttonArray = NULL;
     int used[ATTACKCOMBOS] = {FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER};
 
-printf("%d %d\n", used[0], used[1]);
     while(result == 0){
         switch(currentState){
             case START:
@@ -23,7 +22,7 @@ printf("%d %d\n", used[0], used[1]);
                 abilities = newEnemy->abilities;
                 buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
-                RenderPresent(d);
+                SDL_RenderPresent(d->ren);
                 currentState = PLAYERINPUT;
                 break;
             case PLAYERINPUT:
@@ -35,7 +34,7 @@ printf("%d %d\n", used[0], used[1]);
                 break;
             case PLAYERACTION:
                 success = checkAttack(attack, newEnemy);
-                displayAttack(attack, d, success);
+                attackManager(attack, d, success, battle);
                 damageState(success, newEnemy, playerHealth, pState);
                 break;
             case WIN:
@@ -47,8 +46,17 @@ printf("%d %d\n", used[0], used[1]);
         }
     }
 
-    freeBattle(buttonArray, abilities + 1, battle);
-    free(battle);
+    freeButtons(buttonArray, abilities);
+    freeBattle(battle);
     free(newEnemy);
     return result;
+}
+
+void testStateMachine()
+{
+    display *d = createDisplay(WINDOWWIDTH, WINDOWHEIGHT);
+    int playerHealth = 3;
+
+    closeDisplay(d);
+    succeed("State Machine ok");
 }

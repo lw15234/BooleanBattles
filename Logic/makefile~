@@ -12,9 +12,11 @@ BASE = base.c
 ENEMY = $(BASE) enemy.c
 CHECKATTACK = $(ENEMY) checkAttack.c
 DAMAGE = $(CHECKATTACK) damage.c
-ATTACKANIMATION = $(DAMAGE) attackAnimation.c
-DISPLAY = $(ATTACKANIMATION) display.c
-STATEMACHINE = $(DISPLAY) stateMachine.c
+BASEDISPLAY = $(DAMAGE) baseDisplay.c
+ENTITY = $(BASEDISPLAY) entity.c
+DISPLAYBUTTONS = $(ENTITY) displayButtons.c
+ATTACKANIMATION = $(DISPLAYBUTTONS) attackAnimation.c
+STATEMACHINE = $(ATTACKANIMATION) stateMachine.c
 PLAY = $(STATEMACHINE) play.c
 
 
@@ -35,12 +37,16 @@ checkAttack:
 damage:
 	$(CC) $(DAMAGE) $(TESTRUN) -DRUN=testDamage -o $(TARGET) $(CFLAGS) $(LIBS)
 	./booleanBattles
+baseDisplay:
+	$(CC) $(BASEDISPLAY) $(TESTRUN) -DRUN=testBaseDisplay -o $(TARGET) $(CFLAGS) $(LIBS)
+entity:
+	$(CC) $(ENTITY) $(TESTRUN) -DRUN=testEntity -o $(TARGET) $(CFLAGS) $(LIBS)
+displayButtons:
+	$(CC) $(DISPLAYBUTTONS) $(TESTRUN) -DRUN=testButtons -o $(TARGET) $(CFLAGS) $(LIBS)
 attackAnimation:
 	$(CC) $(ATTACKANIMATION) $(TESTRUN) -DRUN=testAttackAnimation -o $(TARGET) $(CFLAGS) $(LIBS)
-display:
-	$(CC) $(DISPLAY) $(TESTRUN) -DRUN=testDisplay -o $(TARGET) $(CFLAGS) $(LIBS)
 stateMachine:
-	$(CC) $(STATEMACHINE) $(TESTRUN) -DRUN=runStateMachine -o $(TARGET) $(CFLAGS) $(LIBS)
+	$(CC) $(STATEMACHINE) $(TESTRUN) -DRUN=testStateMachine -o $(TARGET) $(CFLAGS) $(LIBS)
 play:
 	$(CC) $(PLAY) -o $(TARGET) $(CFLAGS) $(LIBS)
 
