@@ -1,6 +1,8 @@
-/*Checks if enemy is weak to an attack*/
+/*Checks if enemy is weak to an attack. Also checks if player has used attack already*/
 
 #include "checkAttack.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /*Is passed an integer representing an attack combo.
 	Checks if integer is in enemy weakness array*/
@@ -15,15 +17,30 @@ int checkAttack(int attack, enemy* pEnemy)
     return 0;
 }
 
+int checkUsed(int attack, int used[])
+{
+    int i;
+    for(i = 0; i < ATTACKCOMBOS; i++){
+        if(attack == used[i]){
+            printf("Attack already used, %d\n", i);
+            return 0;
+        }
+        if(used[i] == FILLER){
+            used[i] = attack;
+            return 1;
+        }
+    }
+    printf("Reached end of used array, %d, %d, %d, %d, %d, %d, %d, %d\n", used[0], used[1], used[2], used[3], used[4], used[5], used[6], used[7]);
+    exit(1);
+}
+
 
 /*Test the check attack module*/
 void testCheckAttack()
 {
     int i, j, k, l, attack;
     int results[ATTACKCOMBOS];
-    battleState currentState;
-    battleState* pState = &currentState;
-    enemy *newEnemy = createEnemy(pState, 8);
+    enemy *newEnemy = createEnemy(8);
     l = 0;
 
     for(i = 0; i <= 1; i++){
