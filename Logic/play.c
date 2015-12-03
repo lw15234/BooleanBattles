@@ -25,12 +25,12 @@ int main(void)
                 break;
             case MAP:
                 /*currentLevel = someMapFunction();*/
+                currentLevel++;
                 if(currentLevel < LEVELS){
-                    currentLevel++;
                     currentState = BATTLE;
                 }
                 else{
-                    printf("You win!\n");
+                    fprintf(stdout, "You win! Game over.\n");
                     currentState = GAMEEND;
                 }
                 break;
