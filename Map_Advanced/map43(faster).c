@@ -304,7 +304,7 @@ int chooseImage(char **gImageCurrent_name, size_t imageUseNumber_current, size_t
 
 	////***movement variables**********************************
 	//how fast does the hero walk (1000n/second)
-	const int walkDelay = 150, runDelay = walkDelay/2;
+	const int walkDelay = 75, runDelay = walkDelay/2;
 
 	const char *gImageCurrent_name_pointerPrototype;
 
