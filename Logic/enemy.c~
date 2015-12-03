@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 /*Something to fill space in our weakness array. Not an actual attack.*/
-#define FILLER -99
 
 
 void fillWeaknessArray(enemy* newEnemy, int weaknesses[]);
