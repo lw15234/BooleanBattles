@@ -27,6 +27,7 @@ struct entity{
 struct currentBattle{
     entity *hero; 
     entity *enemy;
+	entity *question;
     SDL_Surface *sur;
     SDL_Texture *tex;
 };
@@ -210,6 +211,7 @@ currentBattle *createBattle(display *d, enemy *e)
     battle->tex = SDL_CreateTextureFromSurface(d->ren, battle->sur);
     battle->hero = createEntity("enemies/hero.bmp", 50, 350, 200, 300, d);
     battle->enemy = createEntity(e->enemySprite, 750, 150, 350, 500, d);
+	battle->question = createEntity(e->question, 300, 50, 500, 75, d);
    
 
     return battle;
@@ -219,6 +221,7 @@ void RenderRefresh(display *d, currentBattle *battle)
 {
     SDL_RenderClear(d->ren);
     SDL_RenderCopy(d->ren, battle->tex, NULL, NULL);
+	SDL_RenderCopy(d->ren, battle->question->entityTex, NULL, &battle->question->entityPos);
     SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
     SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
 }

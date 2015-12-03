@@ -15,7 +15,7 @@ void fillWeaknessArray(enemy* newEnemy, int weaknesses[]);
 struct enemy *createEnemy(int level)
 {
     enemy enemyArray[LEVELS] = {
-        {1, 1, "F",                     {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/uglygreentroll.bmp", "Map_Levels/swamp.bmp", "questions/one.bmp","dialogue/one.bmp" }, 
+        {1, 1, "F",                     {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/uglygreentroll.bmp", "Map_Levels/swamp.bmp", "questions/test.bmp","dialogue/one.bmp" }, 
         {1, 1, "!F",                    {  0,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/faun.bmp", "Map_Levels/happy_land.bmp", "questions/two.bmp", "dialogue/two.bmp" },
         {1, 1, "!!F",                   {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/goblin.bmp", "background.bmp", "questions/three.bmp", "dialogue/three.bmp" },
         {2, 1, "F && I",                { 11,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/fox.bmp", "background.bmp", "questions/four.bmp", "dialogue/four.bmp" },
