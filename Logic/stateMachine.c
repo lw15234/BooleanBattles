@@ -22,7 +22,7 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 abilities = newEnemy->abilities;
                 buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
-                RenderPresent(d);
+                SDL_RenderPresent(d->ren);
                 currentState = PLAYERINPUT;
                 break;
             case PLAYERINPUT:
@@ -34,7 +34,7 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 break;
             case PLAYERACTION:
                 success = checkAttack(attack, newEnemy);
-                displayAttack(attack, d, success);
+                attackManager(attack, d, success, battle);
                 damageState(success, newEnemy, playerHealth, pState);
                 break;
             case WIN:
@@ -46,8 +46,17 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
         }
     }
 
-    freeBattle(buttonArray, abilities + 1, battle);
-    free(battle);
+    freeButtons(buttonArray, abilities);
+    freeBattle(battle);
     free(newEnemy);
     return result;
+}
+
+void testStateMachine()
+{
+    display *d = createDisplay(WINDOWWIDTH, WINDOWHEIGHT);
+    int playerHealth = 3;
+    runStateMachine(&playerHealth, 8, d);
+    closeDisplay(d);
+    succeed("State Machine ok");
 }

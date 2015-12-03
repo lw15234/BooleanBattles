@@ -21,11 +21,11 @@ typedef struct projectile{
 
 projectile *createProjectile();
 void destroyProjectile(projectile *p);
-void renderAttack(int attack, projectile *p, SDL_Renderer *ren, int success);
+void renderAttack(int attack, projectile *p, display *d, int success, currentBattle *battle);
 void selectAttack(int attack, projectile *p);
-void setAttackAttr(projectile *p, SDL_Renderer *ren);
+void setAttackAttr(projectile *p, display *d);
 void fillClips(projectile *p);
-void animateAttack(projectile *p, SDL_Renderer *ren, int success);
+void animateAttack(projectile *p, display *d, int success, currentBattle *battle);
 
 
 projectile *createProjectile(){
@@ -46,7 +46,7 @@ void destroyProjectile(projectile *p){
     return;
 }
 
-void attackManager(int attack, SDL_Renderer *ren, int success)
+void attackManager(int attack, display *d, int success, currentBattle *battle)
 {
     int i;
 
@@ -54,23 +54,23 @@ void attackManager(int attack, SDL_Renderer *ren, int success)
     fillClips(p);
 
     if(attack == 0){
-        renderAttack(3, p, ren, success);
+        renderAttack(3, p, d, success, battle);
     }
     else{
         for(i = 0; i < 3; i++){
             if((attack / (int)pow(10, i)) % 10){
-                renderAttack(i, p, ren, success);
+                renderAttack(i, p, d, success, battle);
             }
         }
     }
     destroyProjectile(p);
 }
 
-void renderAttack(int attack, projectile *p, SDL_Renderer *ren, int success)
+void renderAttack(int attack, projectile *p, display *d, int success, currentBattle *battle)
 {
     selectAttack(attack, p);
-    setAttackAttr(p, ren);
-    animateAttack(p, ren, success);
+    setAttackAttr(p, d);
+    animateAttack(p, d, success, battle);
 }
 
 void selectAttack(int attack, projectile *p)
@@ -107,10 +107,10 @@ void selectAttack(int attack, projectile *p)
     }
 }
 
-void setAttackAttr(projectile *p, SDL_Renderer *ren)
+void setAttackAttr(projectile *p, display *d)
 {
     SDL_SetColorKey(p->sur, SDL_TRUE, SDL_MapRGB(p->sur->format, 228, 129, 250));
-    p->tex = SDL_CreateTextureFromSurface(ren, p->sur);    
+    p->tex = SDL_CreateTextureFromSurface(d->ren, p->sur);    
 }
 
 void fillClips(projectile *p)
@@ -124,7 +124,7 @@ void fillClips(projectile *p)
     }
 }
 
-void animateAttack(projectile *p, SDL_Renderer *ren, int success)
+void animateAttack(projectile *p, display *d, int success, currentBattle *battle)
 {
     int i;
     SDL_Rect *clip = NULL;
@@ -133,30 +133,63 @@ void animateAttack(projectile *p, SDL_Renderer *ren, int success)
 
     if(success){
         for(i = 0; i < LENGTH; i++){
+            SDL_RenderClear(d->ren);
+            RenderRefresh(d, battle);
             clip = &p->spriteClips[i % FRAMES];
             renderQuad.x = XPOS + i * SPEED;
-            SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
-            SDL_RenderPresent(ren);
+            SDL_RenderCopy(d->ren, p->tex, clip, &renderQuad);
+            SDL_RenderPresent(d->ren);
             t = SDL_GetTicks();
             SDL_Delay(20 - (t % 20));
         }
     }
     else{
         for(i = 0; i < REFLECTION; i++){
+            SDL_RenderClear(d->ren);
+            RenderRefresh(d, battle);
             clip = &p->spriteClips[i % FRAMES];
             renderQuad.x = XPOS + i * SPEED;
-            SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
-            SDL_RenderPresent(ren);
+            SDL_RenderCopy(d->ren, p->tex, clip, &renderQuad);
+            SDL_RenderPresent(d->ren);
             t = SDL_GetTicks();
             SDL_Delay(20 - (t % 20));
         }
         for(i = REFLECTION; i < LENGTH; i++){
+            SDL_RenderClear(d->ren);
+            RenderRefresh(d, battle);
             clip = &p->spriteClips[i % FRAMES];
-            renderQuad.x = XPOS + (2 *REFLECTION - i) * SPEED;
-            SDL_RenderCopy(ren, p->tex, clip, &renderQuad);
-            SDL_RenderPresent(ren);
+            renderQuad.x = XPOS + (2 * REFLECTION - i) * SPEED;
+            SDL_RenderCopy(d->ren, p->tex, clip, &renderQuad);
+            SDL_RenderPresent(d->ren);
             t = SDL_GetTicks();
             SDL_Delay(20 - (t % 20));
         }        
     }
+}
+
+
+
+void testAttackAnimation()
+{
+    button *buttonArray;
+    int attack;
+    int used[ATTACKCOMBOS] = {1, 10, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER};
+    battleState state = PLAYERINPUT;
+    display *d = createDisplay(WINDOWWIDTH, WINDOWHEIGHT);
+    enemy *e = createEnemy(8);
+    currentBattle *battle = createBattle(d, e);
+    RenderRefresh(d, battle);
+    SDL_RenderPresent(d->ren);
+    buttonArray = createButtons(3, d);
+
+    attack = renderButtons(buttonArray, 3, used, d, &state, battle);
+    attackManager(attack, d, 1, battle);
+    attack = renderButtons(buttonArray, 3, used, d, &state, battle);
+    attackManager(attack, d, 0, battle);
+
+    freeButtons(buttonArray, 3);
+    freeBattle(battle);
+    free(e);
+    closeDisplay(d);
+    succeed("Animation ok");
 }

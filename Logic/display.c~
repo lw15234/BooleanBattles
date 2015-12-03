@@ -10,14 +10,6 @@ struct button{
     SDL_Surface *buttonSur[2];
 };
 
-struct display{
-    int width, height;
-    SDL_Window *win;
-    SDL_Surface *sur;
-    SDL_Renderer *ren;
-    SDL_Event *e;
-};
-
 struct entity{
     SDL_Rect entityPos;
     SDL_Texture *entityTex;
@@ -138,7 +130,7 @@ int renderButtons(button buttonArray[], int abilities, int used[], display *d, b
                 for(i = 0; i < abilities; i++){
                     attack += choice[i] * pow(10, i);
                 }
-                if(checkUsed(attack, used){
+                if(checkUsed(attack, used)){
                     run = 0;
                 }
                 else{
