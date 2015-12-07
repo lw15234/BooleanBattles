@@ -12,26 +12,12 @@ This map is fully functional for the first 3 levels, and shows map for 10 levels
 More levels are about to be added, and reverse movement can be implemented:
 //algorithms to be implemented:
 [a. path coding notes:]
-for a path from (xa, yb) to (xc, yd):
-d_xa_xc = xc - xa;
-d_yd_yb = yd -yb;
 
-the total number of steps is :
-(xc - xa) + (yd -yb)
+//update: a realistic movement should also be a bit random
+//fully automatic path finding if necessary
 
-if ( (yd -yb)>0 )
-{
-case_direction_x = 1; 
-   for (0 <= N <= yd-yb)
-  {
-  case_direction_y = N*(  (xc - xa) + (yd -yb)  ) / (yd -yb);
-  case_direction_x = case_direction_y + 1;
-  //update path
-  //do animation
-  }
-}
 [b. reverse movement notes:]
-for a path from i to m, with n steps, 
+for a path from i to m, with n steps,
 to go from i to m:
 at step a, one goes direction d, with velocity v;
 to go from m to i:
@@ -64,7 +50,7 @@ All other errors are entirely Iguana team's responsibility.
 #define LOCATION_ON_MAP_NUM_MAX 100
 
 //**import values******************************
-int locationCurrent = 0, locationCap = 2;
+int locationCurrent = 0, locationCap = 9;
 
 
 //**export values******************************
@@ -227,6 +213,7 @@ char *gImageCurrent_name; //The variable image name to demonstrate
 /****PROTOTYPES*************************************/
 /****PROTOTYPES*************************************/
 
+
 //Starts left SDL and creates window
 bool init();
 
@@ -236,13 +223,13 @@ bool simplyUploadAMap ();
 //which image do you want to show ?
 int chooseImage(char **gImageCurrent_name, size_t imageUseNumber_current, size_t imageUseNumber_total, int walkingDirection, int *walkingDirectionPrevious);
 
-/***IMAGE********************************************/
+//***IMAGE********************************************
 bool loadMedia(const char *gImageCurrent_name);
 
-/***free*************************/
+//***free*************************
 void freeF(SDL_Window* gWindow, SDL_Surface* gScreenSurface, SDL_Surface* gImageCurrent);
 
-/***QUIT MAIN LOOP****************/
+//***QUIT MAIN LOOP****************
 bool quitF(SDL_Event e, bool *quit);
 
 //Frees media and shuts down SDL
@@ -317,7 +304,7 @@ int chooseImage(char **gImageCurrent_name, size_t imageUseNumber_current, size_t
 
 	////***movement variables**********************************
 	//how fast does the hero walk (1000n/second)
-	const int walkDelay = 150, runDelay = walkDelay/2;
+	const int walkDelay = 75, runDelay = walkDelay/2;
 
 	const char *gImageCurrent_name_pointerPrototype;
 
@@ -816,11 +803,56 @@ void fillLocationCoordination() {
 
 void fillLocationAccessibility() {
 
-	int temp;
+	int arrayCounter;
 
-	for ( temp=0; temp<=locationCap; temp++ )
-		locationAccess[ temp ] = 1;
+	for ( arrayCounter=0; arrayCounter<=locationCap; arrayCounter++ )
+		locationAccess[ arrayCounter ] = 1;
 
+}
+
+//*********************define directions
+//what does it mean by stand still, looking at us?
+void standStillFaceFront( int *dx, int *dy ) {
+	walkingDirection = front;
+
+	*dy = 0;
+	*dx = 0;
+}
+//what does it mean by stand still, back against us?
+void standStillFaceBack( int *dx, int *dy ) {
+	walkingDirection = back;
+
+	*dy = 0;
+	*dx = 0;
+}
+
+//what does it mean by going right?
+void goRight( int *dx, int *dy ) {
+	walkingDirection = right;
+
+	*dx = walkPace_x;
+	*dy = 0;
+}
+//what does it mean by going left?
+void goLeft( int *dx, int *dy ) {
+	walkingDirection = left;
+
+	*dx = -walkPace_x;
+	*dy = 0;
+}
+//what does it mean by moving towards us?
+void goFront( int *dx, int *dy ) {
+	walkingDirection = front;
+
+	*dy = walkPace_y;
+	*dx = 0;
+}
+//what does it mean by moving away from us?
+void goBack( int *dx, int *dy ) {
+	walkingDirection = back;
+
+	*dy = -walkPace_y;
+	*dx = 0;
 }
 
 
@@ -835,42 +867,37 @@ void marchFromLocation0To1 ( size_t *imageUploadTurn_original, int *dx_original,
 	bool targetLocationReached = *targetLocationReached_original;
 	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
 
-	//targetAreaLocation = 1;
 	//choose which image to upload
 	switch ( imageUploadTurn  ) {
 		case( 1 ): {
-			walkingDirection = right;
-			dx = walkPace_x;
-			dy = 0;
-			//heroPosition_x += 100;
+
+			goRight( &dx, &dy );
 
 			break;
 		}
 		case( INT_MAX - 1 ): {
-			walkingDirection = left;
-			dx = -walkPace_x;
-			dy = 0;
-			//heroPosition_x -= 100;
+
+			goLeft( &dx, &dy );
 
 			break;
 		}
 		case( INT_MAX ): {
-			walkingDirection = front;
-			dy = walkPace_y;
-			dx = 0;
-			//heroPosition_y += 100;
+
+			goFront( &dx, &dy );
+
 			break;
 		}
 		case( ( location1x - location0x  )/walkPace_x ): {
-			walkingDirection = back;
-			dy = -walkPace_y;
-			dx = 0;
-			//heroPosition_y -= 100;
+
+			goBack( &dx, &dy );
+
 			break;
 		}
-		case(  ( ( location1x - location0x  )/walkPace_x ) + 1  ): {//arrived target location
-			dy = 0;
-			dx = 0;
+		case(   (  ( location1x - location0x  )/walkPace_x  ) + 1   ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
 			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
 			//d_sourceAreaLocation_targetAreaLocation --;
 			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
@@ -881,11 +908,9 @@ void marchFromLocation0To1 ( size_t *imageUploadTurn_original, int *dx_original,
 				targetLocationReached = false; //don't quit
 
 				imageUploadTurn = 0; //restore image upload turn
-//				mCurrentState = BUTTON_SPRITE_MOUSE_UP;
 
 				marchingTowardsTargetLocation == true;
 
-				//targetAreaLocation++;
 			} else {
 				targetLocationReached = true;
 				marchingTowardsTargetLocation = false;
@@ -917,48 +942,647 @@ void marchFromLocation1To2 ( size_t *imageUploadTurn_original, int *dx_original,
 	bool targetLocationReached = *targetLocationReached_original;
 	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
 
-
-	//targetAreaLocation = 1;
 	//choose which image to upload
 	switch ( imageUploadTurn  ) {
 		case( 1 ): {
-			walkingDirection = right;
-			dx = walkPace_x;
-			dy = 0;
-			//heroPosition_x += 100;
+
+			goRight( &dx, &dy );
 
 			break;
 		}
 		case( INT_MAX - 1 ): {
-			walkingDirection = left;
-			dx = -walkPace_x;
-			dy = 0;
-			//heroPosition_x -= 100;
+
+			goLeft( &dx, &dy );
 
 			break;
 		}
 		case( INT_MAX ): {
-			walkingDirection = front;
-			dy = walkPace_y;
-			dx = 0;
-			//heroPosition_y += 100;
+
+			goFront( &dx, &dy );
+
 			break;
 		}
 		case( ( location2x - location1x  )/walkPace_x ): {
-			walkingDirection = back;
-			dy = -walkPace_y;
-			dx = 0;
-			//heroPosition_y -= 100;
+
+			goBack( &dx, &dy );
+
 			break;
 		}
 		case(  ( ( location2x - location1x  )/walkPace_x ) + 1  ): {//arrived target location
-			dy = 0;
-			dx = 0;
-			targetLocationReached = true;
-			marchingTowardsTargetLocation = false;
-			locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
-			printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
 
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+}
+
+//march from location 2 - 3
+void marchFromLocation2To3 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+
+//x:right, y:back
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( 1 ):
+		case( 18 ):
+		case( 35 ):
+		case( 51 ):
+
+
+		{
+
+			goRight( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX - 1 ): {
+
+			goLeft( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX ): {
+
+			goFront( &dx, &dy );
+
+			break;
+		}
+		case( 16 ):
+		case( 33 ):
+		case( 49 ):
+{
+
+			goBack( &dx, &dy );
+
+			break;
+		}
+		case(  58 + 1  ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+}
+
+
+//march from location 3 - 4
+void marchFromLocation3To4 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( 3 ):
+			//case( 6 ):
+			//case( 10 ):
+
+		case( 13 ):
+			//case( 17 ):
+			//case( 20 ):
+
+		case( 24 ):
+			//case( 27 ):
+			//case( 30 ):
+
+		case( 34 ):
+			//case( 37 ):
+			//case( 41 ):
+
+		case( 44 ):
+			//case( 48 ):
+		{
+
+			goRight( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX - 1 ): {
+
+			goLeft( &dx, &dy );
+
+			break;
+		}
+		case( 1 ):
+		case( 4+2 ):
+			//case( 7 ):
+			//case( 11 ):
+
+		case( 14+2 ):
+			//case( 18 ):
+			//case( 21 ):
+
+		case( 25+2 ):
+			//case( 28 ):
+			//case( 31 ):
+
+		case( 35+2 ):
+			//case( 38 ):
+			//case( 42 ):
+
+		case( 45+2 ): {
+
+			goFront( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX ): {
+
+			goBack( &dx, &dy );
+
+			break;
+		}
+		case(  48 + 1  ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+}
+
+//march from location 4 - 5
+void marchFromLocation4To5 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+//x:left;y:front
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( INT_MAX - 1 ): {
+
+			goRight( &dx, &dy );
+
+			break;
+		}
+
+		case( 14 ):
+		case( 28 ):
+		case( 42 ): {
+
+			goLeft( &dx, &dy );
+
+			break;
+		}
+		case( 1 ):
+		case( 18 ):
+		case( 32 ):
+		case( 46 ): {
+
+			goFront( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX ): {
+
+			goBack( &dx, &dy );
+
+			break;
+		}
+		case(  48 + 1  ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+}
+
+
+//march from location 5 - 6
+void marchFromLocation5To6 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+//x:left;y:front
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( INT_MAX - 1 ): {
+
+			goRight( &dx, &dy );
+
+			break;
+		}
+
+		case( 11 ):
+		case( 22 ):
+		case( 33 ): {
+
+			goLeft( &dx, &dy );
+
+			break;
+		}
+		case( 1 ):
+		case( 14 ):
+		case( 25 ):
+		case( 36 ): {
+
+			goFront( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX ): {
+
+			goBack( &dx, &dy );
+
+			break;
+		}
+		case(  37 + 1  ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+}
+
+//march from location 6 - 7
+void marchFromLocation6To7 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+//x:left;y:front
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( INT_MAX - 1 ): {
+
+			goRight( &dx, &dy );
+
+			break;
+		}
+		case( 1 ):
+		case( 18 ):
+		case( 33 ): {
+
+			goLeft( &dx, &dy );
+
+			break;
+		}
+
+		case( 15 ):
+		case( 30 ):
+		case( 46 ): {
+
+			goFront( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX ): {
+
+			goBack( &dx, &dy );
+
+			break;
+		}
+		case(  46 + 1  ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+}
+
+//march from location 7 - 8
+void marchFromLocation7To8 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+//x:left;y:back
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( INT_MAX - 1 ): {
+
+			goRight( &dx, &dy );
+
+			break;
+		}
+		case( 1 ):
+		case( 20 ):
+		case( 38 ): {
+
+			goLeft( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX ): {
+
+			goFront( &dx, &dy );
+
+			break;
+		}
+		case( 17 ):
+		case( 35 ):
+		case( 53 ): {
+
+			goBack( &dx, &dy );
+
+			break;
+		}
+		case(  53 + 1  ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
+			break;
+		}
+	} //
+	(imageUploadTurn) ++;
+
+
+
+	*imageUploadTurn_original = imageUploadTurn  ; //restore original variables
+	*dx_original = dx;
+	*dy_original = dy;
+	*targetLocationReached_original = targetLocationReached;
+	*marchingTowardsTargetLocation_original = marchingTowardsTargetLocation;
+}
+
+//march from location 8 - 9
+void marchFromLocation8To9 ( size_t *imageUploadTurn_original, int *dx_original, int *dy_original, bool *targetLocationReached_original, bool *marchingTowardsTargetLocation_original  ) {
+
+	size_t imageUploadTurn = *imageUploadTurn_original; //manipulate pointers
+	int dx = *dx_original;
+	int dy = *dy_original;
+	bool targetLocationReached = *targetLocationReached_original;
+	bool marchingTowardsTargetLocation = *marchingTowardsTargetLocation_original;
+//x:left;y:front
+	//choose which image to upload
+	switch ( imageUploadTurn  ) {
+		case( INT_MAX - 1 ): {
+
+			goRight( &dx, &dy );
+
+			break;
+		}
+		case( 1 ):
+		case( 25 ):
+		case( 45 ): {
+
+			goLeft( &dx, &dy );
+
+			break;
+		}
+		case( 20 ):
+		case( 40 ):
+		case( 61 ): {
+
+			goFront( &dx, &dy );
+
+			break;
+		}
+		case( INT_MAX ): {
+
+			goBack( &dx, &dy );
+
+			break;
+		}
+		case(  61 + 1  ): {//arrived target location
+
+			//stand still, back against us(look at the (temporary) location)
+			standStillFaceBack( &dx, &dy );
+
+			printf("d_sourceAreaLocation_targetAreaLocation: %d\n", d_sourceAreaLocation_targetAreaLocation);
+			//d_sourceAreaLocation_targetAreaLocation --;
+			if ( d_sourceAreaLocation_targetAreaLocation >=1 ) {
+
+				sourceAreaLocation = targetAreaLocation; //arriving the new location
+				targetAreaLocation = targetAreaLocationReplica; //recall the final goal
+
+				targetLocationReached = false; //don't quit
+
+				imageUploadTurn = 0; //restore image upload turn
+
+				marchingTowardsTargetLocation == true;
+
+			} else {
+				targetLocationReached = true;
+				marchingTowardsTargetLocation = false;
+
+				locationCurrent = sourceAreaLocation = targetAreaLocation; //we have arrived the new location
+				printf("sourceAreaLocation: %d\n\n", sourceAreaLocation);
+			}
 			break;
 		}
 	} //
@@ -978,10 +1602,6 @@ void marchFromLocation1To2 ( size_t *imageUploadTurn_original, int *dx_original,
 /****MAIN*************************************/
 int main( int argc, char* args[] ) {
 
-//which locations are open? //updated from battle section
-	//locationAccess[ Gydanhil ] = 1;
-	//locationAccess[ FroastoakVale ] = 1;
-	//locationAccess[ NessusRoad ] = 0;
 
 ////***initialise map variables*************************************************
 
@@ -1071,7 +1691,7 @@ int main( int argc, char* args[] ) {
 				} else if ( sourceAreaLocation <= targetAreaLocation - 1) { //if from early battlefield to later battlefield
 
 
-					if ( d_sourceAreaLocation_targetAreaLocation >= 2 ) { // if the final goal isn't the nex battle
+					if ( d_sourceAreaLocation_targetAreaLocation >= 2 ) { // if the final goal isn't the next battle
 						targetAreaLocation = sourceAreaLocation + 1; //set a short term goal
 
 					}
@@ -1094,14 +1714,81 @@ int main( int argc, char* args[] ) {
 						}
 						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
 					}
+					//march from location 2 - 3
+					else if (  ( targetAreaLocation == 3 )  ) {
+						marchFromLocation2To3 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+					//march from location 3 - 4
+					else if (  ( targetAreaLocation == 4 )  ) {
+						marchFromLocation3To4 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+					//march from location 4 - 5
+					else if (  ( targetAreaLocation == 5 )  ) {
+						marchFromLocation4To5 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+					//march from location 5 - 6
+					else if (  ( targetAreaLocation == 6 )  ) {
+						marchFromLocation5To6 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+					//march from location 6 - 7
+					else if (  ( targetAreaLocation == 7 )  ) {
+						marchFromLocation6To7 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+					//march from location 7 - 8
+					else if (  ( targetAreaLocation == 8 )  ) {
+						marchFromLocation7To8 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+					//march from location 8 - 9
+					else if (  ( targetAreaLocation == 9 )  ) {
+						marchFromLocation8To9 ( &imageUploadTurn, &dx, &dy, &targetLocationReached, &marchingTowardsTargetLocation );
+
+						if ( DEBUG_LEVEL >= debug_test ) {
+							printf("imageUploadTurn: %d\ndx: %d, dy: %d; walkPace_x: %d, walkPace_y: %d\n", imageUploadTurn, dx, dy, walkPace_x, walkPace_y);
+						}
+						printf("targetLocationReached: %d, marchingTowardsTargetLocation: %d\n", targetLocationReached, marchingTowardsTargetLocation);
+					}
+
 
 				} else { //unlocked area
 					marchingTowardsTargetLocation = false; //not marching
 				}
 			} else { //not walking
-				walkingDirection = front;
-				dy = 0;
-				dx = 0;
+
+
+
+
+				//stand still, looking at us
+				standStillFaceFront( &dx, &dy );
 
 			}
 			//walking on map
