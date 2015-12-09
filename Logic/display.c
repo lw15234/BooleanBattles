@@ -68,7 +68,9 @@ button *createButtons(int abilities, display *d)
         if(i == abilities){
             buttonArray[i].buttonPos.x = x + (w + 50) * 3;
             buttonArray[i].buttonSur[0] = SDL_LoadBMP("buttons/offAttack.bmp");
+			SDL_SetColorKey( buttonArray[i].buttonSur[0], SDL_TRUE, SDL_MapRGB(buttonArray[i].buttonSur[0]->format, 228, 129, 250 ));
             buttonArray[i].buttonSur[1] = SDL_LoadBMP("buttons/onAttack.bmp");
+			SDL_SetColorKey( buttonArray[i].buttonSur[1], SDL_TRUE, SDL_MapRGB(buttonArray[i].buttonSur[1]->format, 228, 129, 250 ));
             buttonArray[i].buttonTex[0] = 
                 SDL_CreateTextureFromSurface(d->ren, buttonArray[i].buttonSur[0]);
             buttonArray[i].buttonTex[1] = 

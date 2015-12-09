@@ -2,7 +2,7 @@
 #include "SDL.h"
 #include <math.h>
 
-#define FRAMES 10
+#define FRAMES 9
 #define FRAMEDELAY 20 /*Lower this for quicker testing*/
 #define WIDTH 250
 #define HEIGHT 250

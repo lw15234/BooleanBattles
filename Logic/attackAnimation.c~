@@ -2,8 +2,8 @@
 #include "SDL.h"
 #include <math.h>
 
-#define FRAMES 10
-#define FRAMEDELAY 1
+#define FRAMES 9
+#define FRAMEDELAY 1000 /*Lower this for quicker testing*/
 #define WIDTH 250
 #define HEIGHT 250
 #define XPOS 250
