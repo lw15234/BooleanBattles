@@ -3,7 +3,11 @@
 #include <math.h>
 
 #define FRAMES 9
+<<<<<<< HEAD
 #define FRAMEDELAY 30 /*Lower this for quicker testing*/
+=======
+#define FRAMEDELAY 20 /*Lower this for quicker testing*/
+>>>>>>> e86ef1e761d737e0441be4c63e1564a013f6a964
 #define WIDTH 250
 #define HEIGHT 250
 #define XPOS 250

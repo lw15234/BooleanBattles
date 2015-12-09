@@ -216,6 +216,7 @@ void RenderRefresh(display *d, currentBattle *battle)
     SDL_RenderCopy(d->ren, battle->tex, NULL, NULL);
 	 SDL_RenderCopy(d->ren, battle->question->entityTex, NULL, &battle->question->entityPos);
 	 SDL_RenderCopy(d->ren, battle->dialogue->entityTex, NULL, &battle->dialogue->entityPos);
+	 SDL_Delay(5000);
     SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
     SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
 }
