@@ -29,7 +29,7 @@ currentBattle *createBattle(display *d, enemy *e)
     battle->hero = createEntity("enemies/hero.bmp", 50, 350, 200, 300, d);
     battle->enemy = createEntity(e->enemySprite, 750, 150, 350, 500, d);
     battle->question = createEntity(e->question, 300, 50, 500, 75, d);
-	 battle->dialogue = createEntity(e->dialogue, 400, 60, 500, 300, d);
+    battle->dialogue = createEntity(e->dialogue, 400, 60, 500, 300, d);
 
     return battle;
 }
@@ -46,7 +46,7 @@ entity *createEntity(char *filename, int x, int y, int w, int h, display *d)
     ent->entityPos.w = w;
     ent->entityPos.h = h;
     ent->entitySur = SDL_LoadBMP(filename);
-	 SDL_SetColorKey( ent->entitySur, SDL_TRUE, SDL_MapRGB(ent->entitySur->format, 228, 129, 250 ));
+    SDL_SetColorKey( ent->entitySur, SDL_TRUE, SDL_MapRGB(ent->entitySur->format, 228, 129, 250 ));
     ent->entityTex = SDL_CreateTextureFromSurface(d->ren, ent->entitySur);
     return ent;
 }
@@ -58,7 +58,7 @@ void RenderRefresh(display *d, currentBattle *battle)
     SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
     SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
     SDL_RenderCopy(d->ren, battle->question->entityTex, NULL, &battle->question->entityPos);
-	 SDL_RenderCopy(d->ren, battle->dialogue->entityTex, NULL, &battle->dialogue->entityPos);
+    SDL_RenderCopy(d->ren, battle->dialogue->entityTex, NULL, &battle->dialogue->entityPos);
 }
 
 void freeBattle(currentBattle *battle)
