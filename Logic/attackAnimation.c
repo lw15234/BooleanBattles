@@ -3,6 +3,7 @@
 #include <math.h>
 
 #define FRAMES 10
+#define FRAMEDELAY 20 /*Lower this for quicker testing*/
 #define WIDTH 250
 #define HEIGHT 250
 #define XPOS 250
@@ -140,7 +141,7 @@ void animateAttack(projectile *p, display *d, int success, currentBattle *battle
             SDL_RenderCopy(d->ren, p->tex, clip, &renderQuad);
             SDL_RenderPresent(d->ren);
             t = SDL_GetTicks();
-            SDL_Delay(20 - (t % 20));
+            SDL_Delay(FRAMEDELAY - (t % FRAMEDELAY));
         }
     }
     else{
@@ -152,7 +153,7 @@ void animateAttack(projectile *p, display *d, int success, currentBattle *battle
             SDL_RenderCopy(d->ren, p->tex, clip, &renderQuad);
             SDL_RenderPresent(d->ren);
             t = SDL_GetTicks();
-            SDL_Delay(20 - (t % 20));
+            SDL_Delay(FRAMEDELAY - (t % FRAMEDELAY));
         }
         for(i = REFLECTION; i < LENGTH; i++){
             SDL_RenderClear(d->ren);
@@ -162,7 +163,7 @@ void animateAttack(projectile *p, display *d, int success, currentBattle *battle
             SDL_RenderCopy(d->ren, p->tex, clip, &renderQuad);
             SDL_RenderPresent(d->ren);
             t = SDL_GetTicks();
-            SDL_Delay(20 - (t % 20));
+            SDL_Delay(FRAMEDELAY - (t % FRAMEDELAY));
         }        
     }
 }
