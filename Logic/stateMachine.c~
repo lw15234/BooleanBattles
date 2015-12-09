@@ -22,6 +22,9 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 abilities = newEnemy->abilities;
                 buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
+		if(RenderDialogue(d, battle) == -1){
+			return - 2;
+		}
                 SDL_RenderPresent(d->ren);
                 currentState = PLAYERINPUT;
                 break;
@@ -56,7 +59,7 @@ void testStateMachine()
 {
     display *d = createDisplay(WINDOWWIDTH, WINDOWHEIGHT);
     int playerHealth = 3;
-
+    runStateMachine(&playerHealth, 8, d);
     closeDisplay(d);
     succeed("State Machine ok");
 }

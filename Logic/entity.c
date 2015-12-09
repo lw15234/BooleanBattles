@@ -58,7 +58,7 @@ void RenderRefresh(display *d, currentBattle *battle)
     SDL_RenderCopy(d->ren, battle->hero->entityTex, NULL, &battle->hero->entityPos);
     SDL_RenderCopy(d->ren, battle->enemy->entityTex, NULL, &battle->enemy->entityPos);
     SDL_RenderCopy(d->ren, battle->question->entityTex, NULL, &battle->question->entityPos);
-    SDL_RenderCopy(d->ren, battle->dialogue->entityTex, NULL, &battle->dialogue->entityPos);
+    /*SDL_RenderCopy(d->ren, battle->dialogue->entityTex, NULL, &battle->dialogue->entityPos);*/
 }
 
 void freeBattle(currentBattle *battle)
@@ -74,7 +74,26 @@ void freeBattle(currentBattle *battle)
     free(battle);
 }
 
-
+int RenderDialogue(display *d, currentBattle *battle)
+{
+    SDL_Event event;
+    int i = 0;
+	SDL_RenderCopy(d->ren, battle->dialogue->entityTex, NULL, &battle->dialogue->entityPos);
+    SDL_RenderPresent(d->ren);
+    while(i < 4000){
+        SDL_Delay(1);
+        if(SDL_PollEvent(&event)){
+            if(event.type == SDL_QUIT){
+                return QUIT;
+            }
+        	if(event.type == SDL_KEYDOWN || event.type == SDL_MOUSEBUTTONDOWN){
+		        i = 4000;
+            }
+        }
+        i++;
+    }
+    return 0;
+}
 
 void testEntity()
 {

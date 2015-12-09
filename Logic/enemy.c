@@ -20,11 +20,11 @@ struct enemy *createEnemy(int level)
         {1, 1, "!!F",                   {  1,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/goblin.bmp", "Map_Levels/fire_valley.bmp", "questions/three.bmp", "dialogue/three.bmp" },
         {2, 1, "F && I",                { 11,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/fox.bmp", "Map_Levels/robber_level.bmp", "questions/four.bmp", "dialogue/four.bmp" },
         {2, 3, "F || I",                {  1,  10,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/werewolf.bmp", "Map_Levels/mysterious_forest.bmp", "questions/five.bmp", "dialogue/five.bmp" },
-        {2, 3, "F || !I",               {  0,   1,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/vampire.bmp", "background.bmp", "questions/six.bmp", "dialogue/six.bmp" },
-        {2, 3, "!(F && I)",             {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/elephant.bmp", "Map_Levels/space.bmp", "questions/seven.bmp","dialogue/seven.bmp" },
+        {2, 3, "F || !I",               {  0,   1,  11,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/vampire.bmp", "Map_Levels/spooky.bmp", "questions/six.bmp", "dialogue/six.bmp" },
+        {2, 3, "!(F && I)",             {  0,   1,  10,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/elephant.bmp", "Map_Levels/beach.bmp", "questions/seven.bmp","dialogue/seven.bmp" },
         {3, 1, "F && I && L",           {111,                       FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/alien.bmp", "Map_Levels/space.bmp", "questions/eight.bmp", "dialogue/eight.bmp" },
         {3, 3, "(F || I) && L",         {101, 110, 111,                             FILLER, FILLER, FILLER, FILLER, FILLER} , "enemies/oneeyedmonster.bmp", "Map_Levels/egyptian.bmp", "questions/nine.bmp", "dialogue/nine.bmp" },
-        {3, 4, "(F && I) || (!I && L)", { 11, 100, 101, 111,                                FILLER, FILLER, FILLER, FILLER} , "enemies/ninja.bmp", "background.bmp", "questions/ten.bmp", "dialogue/ten.bmp" },
+        {3, 4, "(F && I) || (!I && L)", { 11, 100, 101, 111,                                FILLER, FILLER, FILLER, FILLER} , "enemies/ninja.bmp", "Map_Levels/dojo.bmp", "questions/ten.bmp", "dialogue/ten.bmp" },
     };
 
     enemy *newEnemy = malloc(sizeof(enemy));

@@ -69,7 +69,7 @@ int renderButtons(button *buttonArray, int abilities, int used[], display *d, ba
             if(event.type == SDL_QUIT){
                 run = 0;
                 free(choice);
-                return -1;
+                return QUIT;
             }
             for(i = 0; i < abilities + 1; i++){
                 choice[i] = pressButton(&event, choice[i], buttonArray[i].buttonPos);

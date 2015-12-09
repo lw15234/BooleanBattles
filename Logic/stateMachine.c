@@ -22,14 +22,17 @@ int runStateMachine(int *playerHealth, int currentLevel, display *d)
                 abilities = newEnemy->abilities;
                 buttonArray = createButtons(abilities, d);
                 RenderRefresh(d, battle);
+		if(RenderDialogue(d, battle) == QUIT){
+			return QUIT;
+		}
                 SDL_RenderPresent(d->ren);
                 currentState = PLAYERINPUT;
                 break;
             case PLAYERINPUT:
                 attack = renderButtons(buttonArray, abilities, used, d, pState, battle);
                 //This allows the user to close the game
-                if(attack == -1){
-                    return -2;
+                if(attack == QUIT){
+                    return QUIT;
                 }
                 break;
             case PLAYERACTION:
