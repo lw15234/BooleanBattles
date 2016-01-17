@@ -1,7 +1,6 @@
 #include "baseDisplay.h"
 
-#define WINDOWWIDTH 1080
-#define WINDOWHEIGHT 720
+
 
 display *createDisplay(int width, int height)
 {
