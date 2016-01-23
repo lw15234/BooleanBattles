@@ -27,6 +27,11 @@ struct enemy *createEnemy(int level)
         {3, 4, "(F && I) || (!I && L)", { 11, 100, 101, 111,                                FILLER, FILLER, FILLER, FILLER} , "enemies/ninja.bmp", "Map_Levels/dojo.bmp", "questions/ten.bmp", "dialogue/ten.bmp" },
     };
 
+    if(level < 0 || level >= LEVELS){
+        fail("Tried to access invalid level");
+        exit(1);
+    }
+
     enemy *newEnemy = malloc(sizeof(enemy));
     newEnemy->abilities = enemyArray[level].abilities;
     newEnemy->health = enemyArray[level].health;

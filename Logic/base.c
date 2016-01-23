@@ -22,10 +22,3 @@ void fail(char *message) {
 void testBase() {
     succeed("Base module OK");
 }
-
-
-
-  
-
-
-
