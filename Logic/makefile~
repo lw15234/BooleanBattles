@@ -42,7 +42,8 @@ baseDisplay:
 entity:
 	$(CC) $(ENTITY) $(TESTRUN) -DRUN=testEntity -o $(TARGET) $(CFLAGS) $(LIBS)
 displayButtons:
-	$(CC) $(DISPLAYBUTTONS) $(TESTRUN) -DRUN=testButtons -o $(TARGET) $(CFLAGS) $(LIBS)
+	$(CC) $(DISPLAYBUTTONS) $(TESTRUN) -DRUN=testDisplayButtons -o $(TARGET) $(CFLAGS) $(LIBS)
+	./booleanBattles
 attackAnimation:
 	$(CC) $(ATTACKANIMATION) $(TESTRUN) -DRUN=testAttackAnimation -o $(TARGET) $(CFLAGS) $(LIBS)
 stateMachine:
