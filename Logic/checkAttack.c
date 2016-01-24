@@ -40,6 +40,7 @@ void testCheckAttack()
 {
     int i, j, k, l, attack;
     int results[ATTACKCOMBOS];
+    int used[ATTACKCOMBOS] = {FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER, FILLER};
     enemy *newEnemy = createEnemy(8);
     l = 0;
 
@@ -61,6 +62,16 @@ void testCheckAttack()
         if(results[l] != 1){
             fail("Correct attack check failed.");
         }
+    }
+
+    if(checkUsed(0, used) != 1){
+        fail("First used check failed.");
+    }
+    if(checkUsed(0, used) != 0){
+        fail("Second used check failed.");
+    }
+    if(checkUsed(1, used) != 1){
+        fail("Third used check failed.");
     }
     succeed("CheckAttack ok");
 }

@@ -1,6 +1,8 @@
 /*Contains basic test functions and forward declarations to use throughout
 the rest of the game*/
+
 #define QUIT -2
+
 /*Print a success message*/
 void succeed(char *message);
 

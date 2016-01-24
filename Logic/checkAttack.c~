@@ -30,7 +30,7 @@ int checkUsed(int attack, int used[])
             return 1;
         }
     }
-    printf("Reached end of used array, %d, %d, %d, %d, %d, %d, %d, %d\n", used[0], used[1], used[2], used[3], used[4], used[5], used[6], used[7]);
+    printf("Reached end of used array\n");
     exit(1);
 }
 
