@@ -73,5 +73,19 @@ void testCheckAttack()
     if(checkUsed(1, used) != 1){
         fail("Third used check failed.");
     }
+    if(checkUsed(1, used) != 0){
+        fail("Fourth used check failed.");
+    }
+    if(used[0] != 0){
+        fail("Used array lost 0th value.");
+    }
+    if(used[1] != 1){
+        fail("Used array lost 1st value.");
+    }
+    for(l = 2; l < ATTACKCOMBOS; l++){
+        if(used[l] != FILLER){
+            fail("Used array lost filler value.");
+        }
+    }
     succeed("CheckAttack ok");
 }
